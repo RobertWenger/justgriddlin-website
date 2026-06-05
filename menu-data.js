@@ -74,7 +74,7 @@ var JG_MENU_ITEMS = [
     "desc": "Classic sloppy joe made our way. Messy in the best way possible.",
     "price": "$7",
     "img": "sluppy joe.jpg",
-    "soldOut": true
+    "soldOut": false
   }
 ];
 
