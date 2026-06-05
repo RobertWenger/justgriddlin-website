@@ -10,7 +10,7 @@ var JG_MENU_ITEMS = [
     "desc": "Fresh smash patty, special sauce, lettuce, tomato, grilled onion on a toasted bun.",
     "price": "$8",
     "img": "loaded burger.jpg",
-    "soldOut": true
+    "soldOut": false
   },
   {
     "cat": "Burgers",
