@@ -6,25 +6,17 @@
 var JG_MENU_ITEMS = [
   {
     "cat": "Burgers",
-    "name": "The Griddlin' Burger",
-    "desc": "Fresh smash patty, special sauce, lettuce, tomato, grilled onion on a toasted bun.",
+    "name": "Jalapeno popper Burger",
+    "desc": "Fresh patty with cream cheese jalapeno spread, sliced jalapenos",
     "price": "$8",
     "img": "loaded burger.jpg",
     "soldOut": false
   },
   {
-    "cat": "Burgers",
-    "name": "Steamer Burger",
-    "desc": "Double smash patties straight off the flat top, melted cheese, caramelized onions.",
-    "price": "$10",
-    "img": "buger with steam.jpg",
-    "soldOut": false
-  },
-  {
     "cat": "Hot Dogs",
-    "name": "Loaded Dog",
-    "desc": "All-beef hot dog piled high with your choice of toppings. Simple, perfect.",
-    "price": "$6",
+    "name": "Hotdog",
+    "desc": "Franks hotdog with grilled onions , ketchup and mustard",
+    "price": "$4",
     "img": "loaded hotdog.jpg",
     "soldOut": false
   },
@@ -32,31 +24,15 @@ var JG_MENU_ITEMS = [
     "cat": "Breakfast",
     "name": "Breakfast Burrito",
     "desc": "Eggs, cheese, and your choice of meat wrapped fresh. Morning done the right way.",
-    "price": "$7",
+    "price": "$8",
     "img": "breakfast bureot.jpg",
     "soldOut": false
   },
   {
-    "cat": "Loaded Faves",
-    "name": "Loaded Waffles",
-    "desc": "Crispy waffles stacked with savory toppings. A Just Griddlin' signature.",
-    "price": "$9",
-    "img": "loaded waffols.jpg",
-    "soldOut": false
-  },
-  {
-    "cat": "Loaded Faves",
-    "name": "Loaded Baked Potato",
-    "desc": "Fully loaded baked potato with all the fixings. Comfort food done right.",
-    "price": "$8",
-    "img": "backed potato.jpg",
-    "soldOut": false
-  },
-  {
     "cat": "Snacks",
-    "name": "Nachos",
-    "desc": "Crispy chips smothered in melted cheese, jalapeños, and all your favorite toppings.",
-    "price": "$7",
+    "name": "Sloppy Nacho",
+    "desc": "Tortilla chips smothered in melty cheese and sloppy joe mix",
+    "price": "$8",
     "img": "nacos.jpg",
     "soldOut": false
   },
@@ -72,7 +48,7 @@ var JG_MENU_ITEMS = [
     "cat": "Snacks",
     "name": "Sloppy Joe",
     "desc": "Classic sloppy joe made our way. Messy in the best way possible.",
-    "price": "$7",
+    "price": "$6",
     "img": "sluppy joe.jpg",
     "soldOut": false
   }
