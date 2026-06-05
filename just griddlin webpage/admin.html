@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Just Griddlin' — Owner Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lime:#A8D400;--lime-dk:#8AB500;
+  --dark:#0C0C0C;--dark2:#151515;--dark3:#1E1E1E;--dark4:#252525;
+  --white:#fff;--muted:rgba(255,255,255,.45);--border:rgba(255,255,255,.09);
+  --red:#e53e3e;--red-dim:rgba(229,62,62,.15);
+  --ff:'Raleway',sans-serif;--ffd:'Bebas Neue',sans-serif;--r:4px;
+}
+html,body{height:100%;font-family:var(--ff);background:var(--dark2);color:#fff;-webkit-text-size-adjust:100%}
+img{display:block;max-width:100%}
+button,label{cursor:pointer;font-family:var(--ff)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+
+/* ── LOGIN ───────────────────────────────────────────────── */
+#loginWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.login-box{background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);padding:2.4rem;width:100%;max-width:380px;text-align:center}
+.login-logo{font-family:var(--ffd);font-size:2.2rem;color:#fff;margin-bottom:.3rem}
+.login-logo em{color:var(--lime);font-style:normal}
+.login-sub{font-size:.72rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2rem}
+.lbl{display:block;font-size:.67rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.32rem;text-align:left}
+.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:2px;padding:.72rem 1rem;color:#fff;font-family:var(--ff);font-size:1rem;outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--lime)}
+.login-box .inp{margin-bottom:1.1rem}
+.login-err{font-size:.78rem;color:var(--red);margin-bottom:.85rem;min-height:1.1rem}
+.btn-login{width:100%;padding:.85rem;background:var(--lime);color:var(--dark);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;transition:background .2s}
+.btn-login:hover{background:#fff}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+#adminWrap{display:none;min-height:100vh;flex-direction:column}
+header{background:var(--dark);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;position:sticky;top:0;z-index:200}
+.h-logo{font-family:var(--ffd);font-size:1.5rem;color:#fff;letter-spacing:.04em;white-space:nowrap}
+.h-logo em{color:var(--lime);font-style:normal}
+.h-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.h-badge{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.06);padding:.25rem .65rem;border-radius:2px}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.3rem .8rem;border-radius:2px;transition:all .2s;white-space:nowrap}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.main{flex:1;padding:1.5rem;max-width:1140px;margin:0 auto;width:100%}
+
+/* ── TABS ─────────────────────────────────────────────────── */
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-row::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1.2rem;margin-bottom:-1px;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.tab-btn.on{color:var(--lime);border-bottom-color:var(--lime)}
+.tab-btn:hover:not(.on){color:#fff}
+
+/* ── PANEL HEADER ─────────────────────────────────────────── */
+.panel-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.9rem}
+.panel-title{font-family:var(--ffd);font-size:1.9rem;letter-spacing:.04em;margin-bottom:.18rem}
+.panel-note{font-size:.74rem;color:var(--muted);font-style:italic}
+.btn-add{background:var(--lime);color:var(--dark);font-size:.74rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:.52rem 1.2rem;border:none;border-radius:2px;transition:background .2s;white-space:nowrap}
+.btn-add:hover{background:#fff}
+
+/* ── ITEM CARDS ───────────────────────────────────────────── */
+.item-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem}
+.item-card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s;position:relative}
+.item-card:hover{border-color:rgba(168,212,0,.3)}
+.item-card.is-soldout{border-color:rgba(229,62,62,.35);opacity:.85}
+.card-img-wrap{position:relative}
+.item-card-img,.item-card-img-ph{width:100%;height:145px;object-fit:cover;background:var(--dark4)}
+.item-card-img-ph{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.soldout-ribbon{position:absolute;top:10px;right:0;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.26rem .7rem;border-radius:2px 0 0 2px;pointer-events:none}
+.item-card-body{padding:.95rem}
+.item-card-cat{font-size:.63rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--lime);margin-bottom:.25rem}
+.item-card-name{font-weight:700;font-size:.92rem;margin-bottom:.2rem}
+.item-card-desc{font-size:.75rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item-card-price{font-family:var(--ffd);font-size:1.25rem;color:var(--lime-dk)}
+.item-card-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border)}
+.btn-sm{border:1px solid var(--border);font-size:.67rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.42rem .2rem;border-radius:2px;transition:all .2s;background:none;color:rgba(255,255,255,.7)}
+.btn-sm:hover{background:rgba(255,255,255,.08);color:#fff}
+.btn-sm.soldout-toggle{border-color:rgba(229,62,62,.3);color:rgba(229,62,62,.65)}
+.btn-sm.soldout-toggle:hover,.btn-sm.soldout-toggle.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.btn-sm.restore-toggle{border-color:rgba(168,212,0,.3);color:var(--lime-dk)}
+.btn-sm.restore-toggle:hover{background:rgba(168,212,0,.1);color:var(--lime)}
+.btn-sm.del{border-color:rgba(229,62,62,.2);color:rgba(229,62,62,.45)}
+.btn-sm.del:hover{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+
+/* Event cards */
+.event-card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.event-card:hover{border-color:rgba(168,212,0,.3)}
+.event-card-img,.event-card-img-ph{width:100%;height:135px;object-fit:cover;background:var(--dark4)}
+.event-card-img-ph{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.event-card-body{padding:.95rem}
+.event-card-date{font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:.26rem}
+.event-card-name{font-family:var(--ffd);font-size:1.35rem;letter-spacing:.03em;margin-bottom:.2rem;line-height:1.05}
+.event-card-loc{font-size:.75rem;color:var(--muted)}
+.event-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--border)}
+
+/* ── MODAL ────────────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;padding:1.75rem}
+.modal-title{font-family:var(--ffd);font-size:1.7rem;letter-spacing:.04em;margin-bottom:1.4rem}
+.fg{margin-bottom:.9rem}
+.fg .lbl{margin-bottom:.3rem}
+.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:2px;padding:.68rem .9rem;color:#fff;font-family:var(--ff);font-size:.88rem;outline:none;transition:border-color .2s}
+.fg select:focus,.fg textarea:focus{border-color:var(--lime)}
+.fg select option{background:var(--dark3)}
+.fg textarea{resize:vertical;min-height:76px}
+.fg-hint{font-size:.67rem;color:rgba(255,255,255,.28);margin-top:.26rem;font-style:italic}
+.img-preview{width:100%;height:120px;object-fit:cover;border-radius:2px;margin-top:.45rem;border:1px solid var(--border)}
+.img-ph{width:100%;height:120px;background:var(--dark4);border-radius:2px;margin-top:.45rem;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.toggle-row{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:2px;padding:.72rem .95rem}
+.toggle-label{flex:1}
+.toggle-label strong{display:block;font-size:.84rem;font-weight:600;margin-bottom:.1rem}
+.toggle-label span{font-size:.72rem;color:var(--muted)}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:12px;transition:background .25s;cursor:pointer}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .25s}
+.toggle input:checked+.toggle-slider{background:var(--red)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+.modal-actions{display:flex;gap:.7rem;margin-top:1.3rem}
+.btn-save{flex:2;padding:.76rem;background:var(--lime);color:var(--dark);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;transition:background .2s}
+.btn-save:hover{background:#fff}
+.btn-cancel{flex:1;padding:.76rem;background:none;border:1px solid var(--border);color:var(--muted);font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;transition:all .2s}
+.btn-cancel:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+
+/* ── PHOTOS TAB ───────────────────────────────────────────── */
+.photo-sec{margin-bottom:2.2rem;padding-bottom:2.2rem;border-bottom:1px solid var(--border)}
+.photo-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.photo-sec-title{font-family:var(--ffd);font-size:1.5rem;letter-spacing:.04em;margin-bottom:.35rem}
+.photo-sec-sub{font-size:.77rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.55}
+.founder-row{display:flex;align-items:flex-start;gap:1.4rem;flex-wrap:wrap}
+.founder-preview{width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid var(--border);flex-shrink:0}
+.founder-controls{display:flex;flex-direction:column;gap:.6rem;justify-content:center}
+.file-hidden{display:none}
+.btn-upload{display:inline-block;background:var(--lime);color:var(--dark);font-size:.74rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:.52rem 1.1rem;border:none;border-radius:2px;transition:background .2s;text-align:center}
+.btn-upload:hover{background:#fff}
+.btn-reset{background:none;border:1px solid var(--border);color:var(--muted);font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.44rem .9rem;border-radius:2px;transition:all .2s}
+.btn-reset:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.upload-drop{border:2px dashed rgba(255,255,255,.14);border-radius:var(--r);padding:1.8rem 1rem;text-align:center;transition:border-color .2s;cursor:pointer;position:relative}
+.upload-drop:hover,.upload-drop.drag{border-color:var(--lime)}
+.upload-drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-drop-icon{font-size:2rem;margin-bottom:.5rem}
+.upload-drop-txt{font-size:.82rem;color:var(--muted);margin-bottom:.22rem}
+.upload-drop-hint{font-size:.68rem;color:rgba(255,255,255,.22)}
+.storage-wrap{margin-top:1.1rem}
+.storage-track{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.storage-fill{height:100%;background:var(--lime);border-radius:3px;transition:width .4s}
+.storage-fill.warn{background:#f6ad55}
+.storage-fill.danger{background:var(--red)}
+.storage-lbl{font-size:.67rem;color:var(--muted);margin-top:.3rem}
+.custom-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.55rem;margin-top:.9rem}
+.cg-item{position:relative;aspect-ratio:1;border-radius:3px;overflow:hidden;background:var(--dark4)}
+.cg-item img{width:100%;height:100%;object-fit:cover}
+.cg-del{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(229,62,62,.88);color:#fff;border:none;border-radius:50%;font-size:.7rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.cg-del:hover{background:var(--red)}
+.empty-note{font-size:.8rem;color:var(--muted);font-style:italic}
+
+/* ── SETTINGS ─────────────────────────────────────────────── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start}
+.settings-card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem}
+.settings-card-title{font-family:var(--ffd);font-size:1.45rem;letter-spacing:.04em;margin-bottom:.35rem}
+.settings-card-sub{font-size:.74rem;color:var(--muted);margin-bottom:1.3rem;line-height:1.55}
+.pw-group{margin-bottom:.85rem}
+.pw-group .lbl{margin-bottom:.3rem}
+.pw-row{display:flex;align-items:center;position:relative}
+.pw-row .inp{flex:1;padding-right:2.6rem}
+.pw-eye{position:absolute;right:.7rem;background:none;border:none;color:var(--muted);font-size:.9rem;padding:.2rem;transition:color .2s}
+.pw-eye:hover{color:#fff}
+.pw-msg{font-size:.74rem;margin-top:.55rem;min-height:1rem}
+.pw-msg.err{color:var(--red)}.pw-msg.ok{color:var(--lime)}
+.btn-pw-save{width:100%;padding:.76rem;background:var(--lime);color:var(--dark);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;transition:background .2s;margin-top:.4rem}
+.btn-pw-save:hover{background:#fff}
+.info-list{list-style:none}
+.info-list li{font-size:.8rem;color:rgba(255,255,255,.62);padding:.48rem 0;border-bottom:1px solid var(--border);line-height:1.55}
+.info-list li:last-child{border-bottom:none}
+.info-list li strong{display:block;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:.12rem}
+
+/* ── PUBLISH BAR ──────────────────────────────────────────── */
+.publish-bar{border-top:2px solid var(--lime);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem;transition:background .3s}
+.publish-bar.ready{background:rgba(168,212,0,.07)}
+.publish-bar.not-ready{background:rgba(255,255,255,.03)}
+.publish-bar.publishing{background:rgba(168,212,0,.04)}
+.publish-bar-text{}
+.publish-bar-title{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.18rem}
+.publish-bar-sub{font-size:.7rem;color:var(--muted);line-height:1.5}
+.publish-bar-sub a{color:var(--lime);text-decoration:underline}
+.btn-publish{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.7rem 1.5rem;border:none;border-radius:2px;transition:all .2s;white-space:nowrap;flex-shrink:0;cursor:pointer;font-family:var(--ff)}
+.btn-publish.ready{background:var(--lime);color:var(--dark)}
+.btn-publish.ready:hover{background:#fff}
+.btn-publish.not-ready{background:rgba(255,255,255,.08);color:var(--muted);border:1px solid var(--border)}
+.btn-publish.not-ready:hover{background:rgba(255,255,255,.13);color:#fff}
+.btn-publish:disabled{opacity:.55;cursor:not-allowed}
+/* Setup guide */
+.setup-guide{margin-bottom:1.2rem;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.setup-guide summary{padding:.7rem 1rem;font-size:.75rem;font-weight:600;color:var(--lime);cursor:pointer;letter-spacing:.05em;list-style:none;display:flex;align-items:center;justify-content:space-between}
+.setup-guide summary::after{content:'▼';font-size:.6rem;color:var(--muted);transition:transform .2s}
+.setup-guide[open] summary::after{transform:rotate(180deg)}
+.setup-guide-body{padding:.85rem 1rem 1rem;border-top:1px solid var(--border);background:rgba(255,255,255,.03)}
+.setup-guide ol{padding-left:1.1rem}
+.setup-guide li{font-size:.77rem;color:rgba(255,255,255,.65);margin-bottom:.55rem;line-height:1.55}
+.setup-guide li:last-child{margin-bottom:0}
+.setup-guide li strong{color:#fff}
+.setup-guide li a{color:var(--lime);text-decoration:underline}
+.gh-status{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;font-size:.75rem;padding:.5rem .75rem;border-radius:2px;border:1px solid var(--border)}
+.gh-status.connected{background:rgba(168,212,0,.08);border-color:rgba(168,212,0,.25);color:var(--lime)}
+.gh-status.disconnected{background:rgba(255,255,255,.04);color:var(--muted)}
+/* ── BACKUP BAR ───────────────────────────────────────────── */
+.backup-bar{background:var(--dark);border-top:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.7rem}
+.backup-note{font-size:.7rem;color:var(--muted)}
+.backup-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn-bk{background:none;border:1px solid var(--border);color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.34rem .85rem;border-radius:2px;transition:all .2s}
+.btn-bk:hover{color:#fff;border-color:rgba(255,255,255,.28)}
+
+/* ── TOAST ────────────────────────────────────────────────── */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(14px);background:var(--lime);color:var(--dark);font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.52rem 1.4rem;border-radius:2px;opacity:0;pointer-events:none;transition:all .28s;z-index:9999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:700px){
+  .settings-grid{grid-template-columns:1fr}
+  .modal{padding:1.3rem}
+}
+@media(max-width:480px){
+  .h-badge{display:none}
+  .main{padding:1rem}
+  .item-list{grid-template-columns:1fr}
+  .backup-bar{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ════════════════════════════════════════════════ -->
+<div id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">Just <em>Griddlin'</em></div>
+    <div class="login-sub">Owner Portal</div>
+    <label class="lbl" for="pwInput">Password</label>
+    <input type="password" id="pwInput" class="inp" placeholder="Enter your password" autocomplete="current-password">
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- ══ ADMIN ════════════════════════════════════════════════ -->
+<div id="adminWrap">
+  <header>
+    <div class="h-logo">Just <em>Griddlin'</em></div>
+    <div class="h-right">
+      <span class="h-badge">Owner Portal</span>
+      <button class="btn-logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="tab-row">
+      <button class="tab-btn on" id="tabBtnMenu"     onclick="showTab('menu',this)">Menu Items</button>
+      <button class="tab-btn"    id="tabBtnEvents"   onclick="showTab('events',this)">Events &amp; Locations</button>
+      <button class="tab-btn"    id="tabBtnPhotos"   onclick="showTab('photos',this)">Photos</button>
+      <button class="tab-btn"    id="tabBtnSettings" onclick="showTab('settings',this)">Settings</button>
+    </div>
+
+    <!-- MENU PANEL -->
+    <div id="tabMenu">
+      <div class="panel-hd">
+        <div><div class="panel-title">Menu Items</div><div class="panel-note">Changes appear on the website immediately.</div></div>
+        <button class="btn-add" onclick="openModal('menu')">+ Add Item</button>
+      </div>
+      <div class="item-list" id="menuList"></div>
+    </div>
+
+    <!-- EVENTS PANEL -->
+    <div id="tabEvents" style="display:none">
+      <div class="panel-hd">
+        <div><div class="panel-title">Events &amp; Locations</div><div class="panel-note">Update where people can find the truck.</div></div>
+        <button class="btn-add" onclick="openModal('event')">+ Add Event</button>
+      </div>
+      <div class="item-list" id="eventList"></div>
+    </div>
+
+    <!-- PHOTOS PANEL -->
+    <div id="tabPhotos" style="display:none">
+      <div class="panel-hd">
+        <div><div class="panel-title">Photos</div><div class="panel-note">Update your founder photo and add new gallery images.</div></div>
+      </div>
+
+      <!-- Founder Photo -->
+      <div class="photo-sec">
+        <div class="photo-sec-title">Founder Photo</div>
+        <div class="photo-sec-sub">This is the photo that appears in the "Our Story" section. Tap "Choose Photo" to upload a new one from your phone or computer.</div>
+        <div class="founder-row">
+          <img id="founderPreview" class="founder-preview" src="founder josh.jpg" alt="Founder photo">
+          <div class="founder-controls">
+            <label class="btn-upload" for="founderInput">Choose Photo</label>
+            <input type="file" id="founderInput" class="file-hidden" accept="image/*" onchange="uploadFounder(event)">
+            <button class="btn-reset" onclick="clearFounder()">Reset to Original</button>
+          </div>
+        </div>
+        <div class="storage-wrap" id="storageWrap">
+          <div class="storage-track"><div class="storage-fill" id="storageFill" style="width:0%"></div></div>
+          <div class="storage-lbl" id="storageLbl">Calculating storage…</div>
+        </div>
+      </div>
+
+      <!-- Gallery Photos -->
+      <div class="photo-sec">
+        <div class="photo-sec-title">Gallery Photos</div>
+        <div class="photo-sec-sub">Upload new photos to add to the gallery on the website. They'll appear after the built-in photos. Photos are compressed automatically to save space.</div>
+        <div class="upload-drop" id="galleryDrop" onclick="document.getElementById('galleryInput').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+          <input type="file" id="galleryInput" class="file-hidden" accept="image/*" multiple onchange="uploadGalleryPhotos(event)">
+          <div class="upload-drop-icon">📷</div>
+          <div class="upload-drop-txt">Tap to choose photos</div>
+          <div class="upload-drop-hint">JPG, PNG — compressed automatically</div>
+        </div>
+        <div class="custom-gallery-grid" id="customGalleryGrid"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div id="tabSettings" style="display:none">
+      <div class="panel-hd">
+        <div><div class="panel-title">Settings</div><div class="panel-note">Manage your password and account.</div></div>
+      </div>
+      <div class="settings-grid">
+
+        <!-- One-Click Publishing -->
+        <div class="settings-card">
+          <div class="settings-card-title">One-Click Publishing</div>
+          <div class="settings-card-sub">Connect to GitHub so "Publish Changes" pushes everything live automatically. Set this up once — then it's one tap forever.</div>
+          <div class="gh-status" id="ghStatus"><span>⚪</span> Not connected yet</div>
+          <details class="setup-guide">
+            <summary>How to set this up (one time, ~10 min)</summary>
+            <div class="setup-guide-body">
+              <ol>
+                <li>Create a free account at <a href="https://github.com" target="_blank">github.com</a> if you don't have one.</li>
+                <li>Create a <strong>new repository</strong> (click the + in the top right → New repository). Name it anything, set it to Public.</li>
+                <li>Upload all your site files to it (drag and drop them onto the repo page).</li>
+                <li>Go to <a href="https://netlify.com" target="_blank">netlify.com</a> → Add new site → Import from Git → connect your GitHub repo. Netlify will now auto-deploy whenever the repo changes.</li>
+                <li>Back on GitHub: click your profile photo → <strong>Settings</strong> → <strong>Developer Settings</strong> → <strong>Personal Access Tokens</strong> → <strong>Fine-grained tokens</strong> → Generate new token.</li>
+                <li>Under "Repository access" choose your site repo. Under Permissions → Repository permissions → set <strong>Contents: Read and write</strong>. Generate the token and copy it.</li>
+                <li>Paste the token below along with your GitHub username and repo name, then hit Save.</li>
+              </ol>
+            </div>
+          </details>
+          <div class="fg">
+            <label class="lbl">GitHub Token</label>
+            <div class="pw-row"><input type="password" id="gh_token" class="inp" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"><button class="pw-eye" onclick="togglePw('gh_token',this)" tabindex="-1">👁</button></div>
+            <div class="fg-hint">Fine-grained token with Contents: Read and write on your repo.</div>
+          </div>
+          <div class="fg">
+            <label class="lbl">GitHub Username</label>
+            <input type="text" id="gh_owner" class="inp" placeholder="e.g. joshjustgriddlin">
+          </div>
+          <div class="fg">
+            <label class="lbl">Repository Name</label>
+            <input type="text" id="gh_repo" class="inp" placeholder="e.g. justgriddlin-website">
+          </div>
+          <div id="ghSaveMsg" class="pw-msg"></div>
+          <button class="btn-pw-save" onclick="saveGitHubSettings()">Save &amp; Connect</button>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-title">Change Password</div>
+          <div class="settings-card-sub">Must be at least 8 characters. You'll need your current password to set a new one.</div>
+          <div class="pw-group">
+            <label class="lbl">Current Password</label>
+            <div class="pw-row"><input type="password" id="pw_current" class="inp" placeholder="Your current password"><button class="pw-eye" onclick="togglePw('pw_current',this)" tabindex="-1">👁</button></div>
+          </div>
+          <div class="pw-group">
+            <label class="lbl">New Password</label>
+            <div class="pw-row"><input type="password" id="pw_new" class="inp" placeholder="At least 8 characters"><button class="pw-eye" onclick="togglePw('pw_new',this)" tabindex="-1">👁</button></div>
+          </div>
+          <div class="pw-group">
+            <label class="lbl">Confirm New Password</label>
+            <div class="pw-row"><input type="password" id="pw_confirm" class="inp" placeholder="Re-enter new password"><button class="pw-eye" onclick="togglePw('pw_confirm',this)" tabindex="-1">👁</button></div>
+          </div>
+          <div id="pwMsg" class="pw-msg"></div>
+          <button class="btn-pw-save" onclick="changePassword()">Update Password</button>
+        </div>
+
+        <div class="settings-card" style="grid-column:1/-1">
+          <div class="settings-card-title">Quick Guide</div>
+          <div class="settings-card-sub">How to use this admin panel.</div>
+          <ul class="info-list">
+            <li><strong>Menu Items</strong>Add, edit, or delete items. Use the exact filename for photos already in your website folder.</li>
+            <li><strong>Sold Out</strong>Hit "Sold Out" on any item — a red badge shows on the website. Hit "Available" to bring it back.</li>
+            <li><strong>Events</strong>Update where and when people can find the truck. Keep Facebook updated too.</li>
+            <li><strong>Photos</strong>Upload a new founder photo or add extra gallery images directly from your phone — no files to copy.</li>
+            <li><strong>Backup</strong>Download a backup before big changes. If your browser clears its data, restore from the backup file.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publish bar -->
+  <div class="publish-bar not-ready" id="publishBar">
+    <div class="publish-bar-text">
+      <div class="publish-bar-title" id="publishBarTitle">⚙ One-click publishing not set up yet</div>
+      <div class="publish-bar-sub" id="publishBarSub">Go to the <strong>Settings</strong> tab to connect GitHub. Until then, use the download button to export manually.</div>
+    </div>
+    <button class="btn-publish not-ready" id="publishBtn" onclick="publishChanges()">Publish Changes</button>
+  </div>
+
+  <div class="backup-bar">
+    <span class="backup-note">💾 Safety tools — keep a backup so you never lose your data.</span>
+    <div class="backup-btns">
+      <button class="btn-bk" onclick="exportSiteData()">⬇ Manual Export</button>
+      <button class="btn-bk" onclick="downloadBackup()">Download Backup</button>
+      <button class="btn-bk" onclick="document.getElementById('importFile').click()">Restore Backup</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL ════════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalBg" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle"></div>
+    <div id="modalFields"></div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveItem()">Save</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Saved!</div>
+
+<script>
+/* ══ PASSWORD ══════════════════════════════════════════════
+   Default: Griddlin2025!
+   Once changed, new hash is saved in this browser's storage.
+   ══════════════════════════════════════════════════════════ */
+const DEFAULT_PW = btoa('Griddlin2025!');
+const getHash    = () => localStorage.getItem('jg_pw') || DEFAULT_PW;
+const checkPw    = v  => btoa(v) === getHash();
+
+function doLogin() {
+  const v = document.getElementById('pwInput').value;
+  if (checkPw(v)) {
+    document.getElementById('loginWrap').style.display = 'none';
+    const aw = document.getElementById('adminWrap');
+    aw.style.cssText = 'display:flex;flex-direction:column';
+    sessionStorage.setItem('jg_auth','1');
+    renderAll();
+  } else {
+    document.getElementById('loginErr').textContent = 'Incorrect password — try again.';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+
+function doLogout() { sessionStorage.removeItem('jg_auth'); location.reload(); }
+
+if (sessionStorage.getItem('jg_auth')==='1') {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('adminWrap').style.cssText = 'display:flex;flex-direction:column';
+}
+
+/* ── Change Password ─────────────────────────────────────── */
+function togglePw(id, btn) {
+  const i = document.getElementById(id);
+  const show = i.type === 'password';
+  i.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+function changePassword() {
+  const cur = document.getElementById('pw_current').value;
+  const nw  = document.getElementById('pw_new').value;
+  const con = document.getElementById('pw_confirm').value;
+  const msg = document.getElementById('pwMsg');
+  msg.className = 'pw-msg';
+  if (!checkPw(cur))    { msg.className='pw-msg err'; msg.textContent='Current password is incorrect.'; return; }
+  if (nw.length < 8)    { msg.className='pw-msg err'; msg.textContent='New password must be at least 8 characters.'; return; }
+  if (nw !== con)       { msg.className='pw-msg err'; msg.textContent='New passwords do not match.'; return; }
+  localStorage.setItem('jg_pw', btoa(nw));
+  ['pw_current','pw_new','pw_confirm'].forEach(id => document.getElementById(id).value='');
+  msg.className='pw-msg ok'; msg.textContent='✓ Password updated successfully!';
+  showToast('Password Updated!');
+}
+
+/* ══ DEFAULT DATA ══════════════════════════════════════════ */
+const DEFAULT_MENU = [
+  {cat:'Burgers',      name:"The Griddlin' Burger",  desc:'Fresh smash patty, special sauce, lettuce, tomato, grilled onion on a toasted bun.',     price:'$8',  img:'loaded burger.jpg',       soldOut:false},
+  {cat:'Burgers',      name:'Steamer Burger',         desc:'Double smash patties straight off the flat top, melted cheese, caramelized onions.',     price:'$10', img:'buger with steam.jpg',     soldOut:false},
+  {cat:'Hot Dogs',     name:'Loaded Dog',             desc:'All-beef hot dog piled high with your choice of toppings. Simple, perfect.',             price:'$6',  img:'loaded hotdog.jpg',        soldOut:false},
+  {cat:'Breakfast',    name:'Breakfast Burrito',      desc:'Eggs, cheese, and your choice of meat wrapped fresh. Morning done the right way.',       price:'$7',  img:'breakfast bureot.jpg',     soldOut:false},
+  {cat:'Loaded Faves', name:'Loaded Waffles',         desc:"Crispy waffles stacked with savory toppings. A Just Griddlin' signature.",               price:'$9',  img:'loaded waffols.jpg',       soldOut:false},
+  {cat:'Loaded Faves', name:'Loaded Baked Potato',    desc:'Fully loaded baked potato with all the fixings. Comfort food done right.',               price:'$8',  img:'backed potato.jpg',        soldOut:false},
+  {cat:'Snacks',       name:'Nachos',                 desc:'Crispy chips smothered in melted cheese, jalapeños, and all your favorite toppings.',   price:'$7',  img:'nacos.jpg',                soldOut:false},
+  {cat:'Snacks',       name:'Walking Taco',           desc:"Doritos bag turned into a portable taco bowl. A fair food classic.",                    price:'$6',  img:'walking taco.jpg',         soldOut:false},
+  {cat:'Snacks',       name:'Sloppy Joe',             desc:'Classic sloppy joe made our way. Messy in the best way possible.',                      price:'$7',  img:'sluppy joe.jpg',           soldOut:false},
+];
+const DEFAULT_EVENTS = [
+  {date:'Check Facebook for Dates', name:'Eaton County Fair',  loc:'Eaton County Fairgrounds, MI',         img:'eaton county fair event.jpg'},
+  {date:'Check Facebook for Dates', name:'Maple Festival',     loc:'Michigan',                             img:'maple fest even.jpg'},
+  {date:'Check Facebook for Dates', name:'Speedway Events',    loc:'Local Speedway, MI',                   img:'speedway event.jpg'},
+  {date:'Weekends & Events',        name:'Community Pop-Ups',  loc:'Follow us on FB for exact locations!', img:'event.jpg'},
+];
+
+/* ── Data helpers ────────────────────────────────────────── */
+const load  = key => { try { const s=localStorage.getItem(key); return s?JSON.parse(s):null; } catch{return null;} };
+const getMenu   = () => load('jg_menu')   || JSON.parse(JSON.stringify(DEFAULT_MENU));
+const getEvents = () => load('jg_events') || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+const getCustomGallery = () => load('jg_gallery_custom') || [];
+const saveMenu   = d => { localStorage.setItem('jg_menu',   JSON.stringify(d)); showToast(); };
+const saveEvents = d => { localStorage.setItem('jg_events', JSON.stringify(d)); showToast(); };
+const saveCustomGallery = d => { localStorage.setItem('jg_gallery_custom', JSON.stringify(d)); updateStorageBar(); showToast(); };
+
+/* ── Tabs ────────────────────────────────────────────────── */
+const PANELS = ['Menu','Events','Photos','Settings'];
+function showTab(name, btn) {
+  PANELS.forEach(t => {
+    const el = document.getElementById('tab'+t);
+    if (el) el.style.display = (t.toLowerCase()===name) ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  if (name==='photos') { renderCustomGallery(); updateStorageBar(); }
+}
+
+/* ── Render Menu ─────────────────────────────────────────── */
+const CATS = ['Burgers','Hot Dogs','Breakfast','Loaded Faves','Snacks'];
+function renderMenu() {
+  const list = document.getElementById('menuList');
+  const items = getMenu();
+  if (!items.length) { list.innerHTML='<p class="empty-note">No items yet. Click "+ Add Item" to start.</p>'; return; }
+  list.innerHTML='';
+  items.forEach((item,i) => {
+    const so = !!item.soldOut;
+    const d = document.createElement('div');
+    d.className='item-card'+(so?' is-soldout':'');
+    const imgHtml = item.img
+      ? `<img class="item-card-img" src="${item.img}" alt="${esc(item.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="item-card-img-ph" style="display:none">Photo not found</div>`
+      : `<div class="item-card-img-ph">No Photo Set</div>`;
+    d.innerHTML=`<div class="card-img-wrap">${imgHtml}${so?'<div class="soldout-ribbon">Sold Out</div>':''}</div>
+      <div class="item-card-body">
+        <div class="item-card-cat">${item.cat}</div>
+        <div class="item-card-name">${esc(item.name)}</div>
+        <div class="item-card-desc">${esc(item.desc)}</div>
+        <div class="item-card-price">${esc(item.price)}</div>
+        <div class="item-card-actions">
+          <button class="btn-sm" onclick="openModal('menu',${i})">Edit</button>
+          <button class="btn-sm ${so?'restore-toggle active':'soldout-toggle'}" onclick="toggleSoldOut(${i})">${so?'Available':'Sold Out'}</button>
+          <button class="btn-sm del" onclick="deleteItem('menu',${i})">Delete</button>
+        </div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+/* ── Render Events ───────────────────────────────────────── */
+function renderEvents() {
+  const list = document.getElementById('eventList');
+  const events = getEvents();
+  if (!events.length) { list.innerHTML='<p class="empty-note">No events yet. Click "+ Add Event" to start.</p>'; return; }
+  list.innerHTML='';
+  events.forEach((ev,i) => {
+    const d = document.createElement('div');
+    d.className='event-card';
+    const imgHtml = ev.img
+      ? `<img class="event-card-img" src="${ev.img}" alt="${esc(ev.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="event-card-img-ph" style="display:none">Photo not found</div>`
+      : `<div class="event-card-img-ph">No Photo Set</div>`;
+    d.innerHTML=`${imgHtml}<div class="event-card-body">
+        <div class="event-card-date">📅 ${esc(ev.date)}</div>
+        <div class="event-card-name">${esc(ev.name)}</div>
+        <div class="event-card-loc">📍 ${esc(ev.loc)}</div>
+        <div class="event-card-actions">
+          <button class="btn-sm" onclick="openModal('event',${i})">Edit</button>
+          <button class="btn-sm del" onclick="deleteItem('event',${i})">Delete</button>
+        </div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function renderAll() { renderMenu(); renderEvents(); renderCustomGallery(); updateStorageBar(); updatePublishBar(); }
+
+/* ── Sold Out ────────────────────────────────────────────── */
+function toggleSoldOut(idx) {
+  const items = getMenu(); items[idx].soldOut = !items[idx].soldOut; saveMenu(items); renderMenu();
+}
+
+/* ── Delete ──────────────────────────────────────────────── */
+function deleteItem(mode,idx) {
+  if (!confirm(`Delete this ${mode==='menu'?'menu item':'event'}? This cannot be undone.`)) return;
+  if (mode==='menu')   { const d=getMenu();   d.splice(idx,1); saveMenu(d);   renderMenu(); }
+  else                 { const d=getEvents(); d.splice(idx,1); saveEvents(d); renderEvents(); }
+}
+
+/* ── Modal ───────────────────────────────────────────────── */
+let mMode='menu', mIdx=-1;
+function openModal(mode,idx) {
+  mMode=mode; mIdx=idx===undefined?-1:idx;
+  document.getElementById('modalTitle').textContent =
+    mIdx===-1 ? (mode==='menu'?'Add Menu Item':'Add Event') : (mode==='menu'?'Edit Menu Item':'Edit Event');
+  const fields = document.getElementById('modalFields');
+  if (mode==='menu') {
+    const item = mIdx===-1?{soldOut:false}:getMenu()[mIdx];
+    fields.innerHTML=`
+      <div class="fg"><label class="lbl">Category</label>
+        <select id="f_cat">${CATS.map(c=>`<option value="${c}"${item.cat===c?' selected':''}>${c}</option>`).join('')}</select></div>
+      <div class="fg"><label class="lbl">Item Name</label>
+        <input type="text" id="f_name" class="inp" value="${esc(item.name||'')}" placeholder="e.g. The Big Griddlin'"></div>
+      <div class="fg"><label class="lbl">Description</label>
+        <textarea id="f_desc" placeholder="Short description...">${esc(item.desc||'')}</textarea></div>
+      <div class="fg"><label class="lbl">Price</label>
+        <input type="text" id="f_price" class="inp" value="${esc(item.price||'')}" placeholder="e.g. $8"></div>
+      <div class="fg"><label class="lbl">Photo Filename</label>
+        <input type="text" id="f_img" class="inp" value="${esc(item.img||'')}" placeholder="e.g. loaded burger.jpg" oninput="livePreview('f_img','imgPrev')">
+        <div class="fg-hint">Exact filename of a photo in your website folder.</div>
+        ${item.img?`<img class="img-preview" id="imgPrev" src="${item.img}" onerror="this.style.display='none'">`:`<div class="img-ph" id="imgPrev">Preview will appear here</div>`}</div>
+      <div class="fg"><div class="toggle-row">
+        <div class="toggle-label"><strong>Mark as Sold Out</strong><span>Shows a red badge on the website.</span></div>
+        <label class="toggle"><input type="checkbox" id="f_soldout" ${item.soldOut?'checked':''}><span class="toggle-slider"></span></label>
+      </div></div>`;
+  } else {
+    const ev = mIdx===-1?{}:getEvents()[mIdx];
+    fields.innerHTML=`
+      <div class="fg"><label class="lbl">Date / When</label>
+        <input type="text" id="f_date" class="inp" value="${esc(ev.date||'')}" placeholder="e.g. July 4th Weekend"></div>
+      <div class="fg"><label class="lbl">Event Name</label>
+        <input type="text" id="f_ename" class="inp" value="${esc(ev.name||'')}" placeholder="e.g. Eaton County Fair"></div>
+      <div class="fg"><label class="lbl">Location</label>
+        <input type="text" id="f_loc" class="inp" value="${esc(ev.loc||'')}" placeholder="e.g. Eaton County Fairgrounds, MI"></div>
+      <div class="fg"><label class="lbl">Photo Filename</label>
+        <input type="text" id="f_eimg" class="inp" value="${esc(ev.img||'')}" placeholder="e.g. event.jpg" oninput="livePreview('f_eimg','eimgPrev')">
+        <div class="fg-hint">Exact filename of a photo in your website folder.</div>
+        ${ev.img?`<img class="img-preview" id="eimgPrev" src="${ev.img}" onerror="this.style.display='none'">`:`<div class="img-ph" id="eimgPrev">Preview will appear here</div>`}</div>`;
+  }
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function livePreview(inputId,previewId) {
+  const val=document.getElementById(inputId).value.trim();
+  const prev=document.getElementById(previewId);
+  if (!prev||!val) return;
+  if (prev.tagName==='IMG') prev.src=val;
+  else prev.outerHTML=`<img class="img-preview" id="${previewId}" src="${val}" onerror="this.style.display='none'">`;
+}
+function saveItem() {
+  if (mMode==='menu') {
+    const name=document.getElementById('f_name').value.trim();
+    if (!name){alert('Please enter an item name.');return;}
+    const entry={cat:document.getElementById('f_cat').value,name,desc:document.getElementById('f_desc').value.trim(),price:document.getElementById('f_price').value.trim(),img:document.getElementById('f_img').value.trim(),soldOut:document.getElementById('f_soldout').checked};
+    const d=getMenu(); mIdx===-1?d.push(entry):d[mIdx]=entry; saveMenu(d); renderMenu();
+  } else {
+    const name=document.getElementById('f_ename').value.trim();
+    if (!name){alert('Please enter an event name.');return;}
+    const entry={date:document.getElementById('f_date').value.trim(),name,loc:document.getElementById('f_loc').value.trim(),img:document.getElementById('f_eimg').value.trim()};
+    const d=getEvents(); mIdx===-1?d.push(entry):d[mIdx]=entry; saveEvents(d); renderEvents();
+  }
+  closeModal();
+}
+function bgClose(e){if(e.target===document.getElementById('modalBg'))closeModal();}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* ══ PHOTO UPLOADS ═════════════════════════════════════════ */
+async function compressImage(file, maxPx=800, quality=0.8) {
+  return new Promise((resolve,reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const ratio = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(img.width  * ratio);
+        canvas.height = Math.round(img.height * ratio);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* Founder photo */
+async function uploadFounder(e) {
+  const file = e.target.files[0]; if (!file) return;
+  try {
+    const b64 = await compressImage(file, 600, 0.85);
+    localStorage.setItem('jg_founder_img', b64);
+    document.getElementById('founderPreview').src = b64;
+    updateStorageBar(); showToast('Founder photo updated!');
+  } catch { alert('Could not process that image. Please try another.'); }
+  e.target.value='';
+}
+function clearFounder() {
+  if (!confirm('Reset founder photo back to the original?')) return;
+  localStorage.removeItem('jg_founder_img');
+  document.getElementById('founderPreview').src = 'founder josh.jpg';
+  updateStorageBar(); showToast('Reset to original!');
+}
+
+/* Gallery photos */
+async function uploadGalleryPhotos(e) {
+  const files = [...e.target.files]; if (!files.length) return;
+  const existing = getCustomGallery();
+  let added = 0;
+  for (const file of files) {
+    try {
+      const b64 = await compressImage(file, 800, 0.78);
+      existing.push({ src: b64, name: file.name });
+      added++;
+    } catch { /* skip bad files */ }
+  }
+  saveCustomGallery(existing);
+  renderCustomGallery();
+  showToast(`${added} photo${added!==1?'s':''} added!`);
+  e.target.value='';
+}
+
+function renderCustomGallery() {
+  const grid = document.getElementById('customGalleryGrid');
+  const photos = getCustomGallery();
+  if (!photos.length) {
+    grid.innerHTML='<p class="empty-note" style="margin-top:.6rem">No custom gallery photos yet. Upload some above!</p>'; return;
+  }
+  grid.innerHTML='';
+  photos.forEach((p,i) => {
+    const d = document.createElement('div'); d.className='cg-item';
+    d.innerHTML=`<img src="${p.src}" alt="${esc(p.name||'Gallery photo')}">
+      <button class="cg-del" onclick="deleteGalleryPhoto(${i})" title="Remove">✕</button>`;
+    grid.appendChild(d);
+  });
+}
+function deleteGalleryPhoto(idx) {
+  if (!confirm('Remove this photo from the gallery?')) return;
+  const d = getCustomGallery(); d.splice(idx,1); saveCustomGallery(d); renderCustomGallery();
+}
+
+/* Drag & drop */
+function dragOver(e) { e.preventDefault(); document.getElementById('galleryDrop').classList.add('drag'); }
+function dragLeave()  { document.getElementById('galleryDrop').classList.remove('drag'); }
+function dropFiles(e) {
+  e.preventDefault(); dragLeave();
+  const dt = e.dataTransfer; if (!dt?.files?.length) return;
+  const fakeEvent = { target:{ files: dt.files }, preventDefault(){} };
+  uploadGalleryPhotos(fakeEvent);
+}
+
+/* Storage bar */
+function updateStorageBar() {
+  const keys = ['jg_menu','jg_events','jg_founder_img','jg_gallery_custom','jg_pw'];
+  let total = 0;
+  keys.forEach(k => { const v=localStorage.getItem(k); if (v) total+=v.length; });
+  const mb   = total / 1024 / 1024;
+  const max  = 5; // conservative 5MB estimate (browsers vary 5-10MB)
+  const pct  = Math.min(100, (mb/max)*100);
+  const fill = document.getElementById('storageFill');
+  const lbl  = document.getElementById('storageLbl');
+  if (fill) { fill.style.width=pct+'%'; fill.className='storage-fill'+(pct>80?' danger':pct>60?' warn':''); }
+  if (lbl)  lbl.textContent=`${mb.toFixed(1)} MB used of ~${max} MB available`;
+  // Load founder preview from storage
+  const fi = localStorage.getItem('jg_founder_img');
+  const fp = document.getElementById('founderPreview');
+  if (fp) fp.src = fi || 'founder josh.jpg';
+}
+
+/* ══ PUBLISH SYSTEM ════════════════════════════════════════ */
+
+function generateMenuDataContent() {
+  const menu       = getMenu();
+  const events     = getEvents();
+  const founderImg = localStorage.getItem('jg_founder_img') || null;
+  const gallery    = getCustomGallery();
+  const date       = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+  return `// ================================================================\n// JUST GRIDDLIN' — Site Data\n// Published from Owner Admin on ${date}\n// ================================================================\n\nvar JG_MENU_ITEMS = ${JSON.stringify(menu, null, 2)};\n\nvar JG_EVENTS = ${JSON.stringify(events, null, 2)};\n\nvar JG_FOUNDER_IMG = ${founderImg ? JSON.stringify(founderImg) : 'null'};\n\nvar JG_GALLERY_CUSTOM = ${JSON.stringify(gallery, null, 2)};\n`;
+}
+
+function exportSiteData() {
+  const blob = new Blob([generateMenuDataContent()], {type:'application/javascript'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'menu-data.js';
+  a.click();
+  showToast('Downloaded — replace the file then redeploy.');
+}
+
+function saveGitHubSettings() {
+  const token = document.getElementById('gh_token').value.trim();
+  const owner = document.getElementById('gh_owner').value.trim();
+  const repo  = document.getElementById('gh_repo').value.trim();
+  const msg   = document.getElementById('ghSaveMsg');
+  msg.className = 'pw-msg';
+  if (!token || !owner || !repo) { msg.className='pw-msg err'; msg.textContent='Please fill in all three fields.'; return; }
+  localStorage.setItem('jg_gh_token', token);
+  localStorage.setItem('jg_gh_owner', owner);
+  localStorage.setItem('jg_gh_repo',  repo);
+  msg.className = 'pw-msg ok';
+  msg.textContent = '✓ Saved! Try publishing a change to test.';
+  updatePublishBar();
+  showToast('GitHub connected!');
+}
+
+function updatePublishBar() {
+  const token = localStorage.getItem('jg_gh_token');
+  const owner = localStorage.getItem('jg_gh_owner');
+  const repo  = localStorage.getItem('jg_gh_repo');
+  const bar   = document.getElementById('publishBar');
+  const title = document.getElementById('publishBarTitle');
+  const sub   = document.getElementById('publishBarSub');
+  const btn   = document.getElementById('publishBtn');
+  const ghSt  = document.getElementById('ghStatus');
+  if (token && owner && repo) {
+    bar.className   = 'publish-bar ready';
+    title.textContent = '🚀 Ready to publish';
+    sub.innerHTML   = `Connected to <strong>${owner}/${repo}</strong>. One tap and changes are live in ~30 seconds.`;
+    btn.className   = 'btn-publish ready';
+    btn.textContent = '🚀 Publish Changes';
+    if (ghSt) { ghSt.className='gh-status connected'; ghSt.innerHTML='<span>🟢</span> Connected to '+owner+'/'+repo; }
+    const tf = document.getElementById('gh_token'); if(tf) tf.value=token;
+    const of = document.getElementById('gh_owner'); if(of) of.value=owner;
+    const rf = document.getElementById('gh_repo');  if(rf) rf.value=repo;
+  } else {
+    bar.className   = 'publish-bar not-ready';
+    title.textContent = '⚙ One-click publishing not set up yet';
+    sub.innerHTML   = 'Go to <strong>Settings</strong> tab to connect GitHub. Until then use <strong>Manual Export</strong> in the bar below.';
+    btn.className   = 'btn-publish not-ready';
+    btn.textContent = 'Publish Changes';
+    if (ghSt) { ghSt.className='gh-status disconnected'; ghSt.innerHTML='<span>⚪</span> Not connected yet'; }
+  }
+}
+
+function toBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+async function publishChanges() {
+  const token = localStorage.getItem('jg_gh_token');
+  const owner = localStorage.getItem('jg_gh_owner');
+  const repo  = localStorage.getItem('jg_gh_repo');
+  const btn   = document.getElementById('publishBtn');
+  if (!token || !owner || !repo) { exportSiteData(); return; }
+
+  btn.textContent = '⏳ Publishing…';
+  btn.disabled    = true;
+  document.getElementById('publishBarTitle').textContent = '⏳ Pushing to GitHub…';
+
+  try {
+    const content = generateMenuDataContent();
+    const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/menu-data.js`;
+    const headers = {'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};
+
+    let sha = null;
+    const getRes = await fetch(apiBase, {headers});
+    if (getRes.ok) sha = (await getRes.json()).sha;
+
+    const putRes = await fetch(apiBase, {
+      method:'PUT', headers,
+      body: JSON.stringify({message:`Update site data — ${new Date().toLocaleString()}`, content:toBase64(content), ...(sha?{sha}:{})})
+    });
+
+    if (putRes.ok) {
+      showToast('🚀 Published! Live in ~30 seconds');
+      document.getElementById('publishBarTitle').textContent = '✅ Published — live in ~30 seconds';
+      document.getElementById('publishBarSub').innerHTML = `Last published: <strong>${new Date().toLocaleTimeString()}</strong>. Netlify is deploying now.`;
+      setTimeout(updatePublishBar, 5000);
+    } else {
+      throw new Error((await putRes.json()).message || 'GitHub API error');
+    }
+  } catch(e) {
+    document.getElementById('publishBarTitle').textContent = '❌ Publish failed';
+    document.getElementById('publishBarSub').innerHTML = `Error: ${e.message}. Check Settings or use <strong>Manual Export</strong> below.`;
+    showToast('Failed — check Settings or use Manual Export');
+  } finally {
+    btn.disabled=false; btn.textContent='🚀 Publish Changes';
+  }
+}
+
+/* ══ BACKUP ════════════════════════════════════════════════ */
+function downloadBackup() {
+  const data = {
+    menu: getMenu(), events: getEvents(),
+    gallery_custom: getCustomGallery(),
+    founder_img: localStorage.getItem('jg_founder_img') || null,
+    saved: new Date().toISOString()
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='justgriddlin-backup.json'; a.click();
+}
+function importBackup(e) {
+  const file=e.target.files[0]; if (!file) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try {
+      const d=JSON.parse(ev.target.result);
+      if (d.menu)           localStorage.setItem('jg_menu',           JSON.stringify(d.menu));
+      if (d.events)         localStorage.setItem('jg_events',         JSON.stringify(d.events));
+      if (d.gallery_custom) localStorage.setItem('jg_gallery_custom', JSON.stringify(d.gallery_custom));
+      if (d.founder_img)    localStorage.setItem('jg_founder_img',    d.founder_img);
+      renderAll(); showToast('Backup restored!');
+    } catch { alert("Couldn't read that file. Make sure it's a Just Griddlin' backup."); }
+  };
+  r.readAsText(file); e.target.value='';
+}
+
+/* ══ TOAST & HELPERS ═══════════════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg||'Saved!';
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* ══ INIT ══════════════════════════════════════════════════ */
+if (sessionStorage.getItem('jg_auth')==='1') renderAll();
+</script>
+</body>
+</html>

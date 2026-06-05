@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Just Griddlin' | Family Owned Food Truck</title>
+<meta name="description" content="Just Griddlin' — Family owned food truck serving fresh burgers, hot dogs, breakfast, and loaded faves across Michigan. Food · Drinks · Snacks.">
+
+<!-- Open Graph — controls how the link looks when shared on Facebook, text, etc. -->
+<meta property="og:title" content="Just Griddlin' | Family Owned Food Truck">
+<meta property="og:description" content="Family owned food truck serving fresh burgers, hot dogs, breakfast, and loaded faves across Michigan.">
+<meta property="og:image" content="AI logo for site.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Just Griddlin' | Family Owned Food Truck">
+<meta name="twitter:description" content="Family owned food truck serving fresh burgers, hot dogs, breakfast, and loaded faves across Michigan.">
+
+<!-- Favicon using the logo -->
+<link rel="icon" type="image/png" href="AI logo for site.png">
+<link rel="apple-touch-icon" href="AI logo for site.png">
+
+<!-- Menu & events data — updated by Josh via admin.html export -->
+<script src="menu-data.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+img{display:block;max-width:100%;height:auto}
+button{cursor:pointer;font-family:inherit}
+a{text-decoration:none}
+/* Skip link */
+.skip-link{position:absolute;top:-100%;left:1rem;background:var(--lime);color:var(--dark);padding:.5rem 1rem;font-size:.8rem;font-weight:700;border-radius:0 0 2px 2px;z-index:9999;transition:top .2s}
+.skip-link:focus{top:0}
+/* Focus visible */
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root{
+  --lime:#A8D400;
+  --lime-dk:#8AB500;
+  --dark:#0C0C0C;
+  --dark2:#151515;
+  --dark3:#1E1E1E;
+  --cream:#F8F5EE;
+  --cream2:#F0EBE0;
+  --white:#FFFFFF;
+  --ink:#1A1A1A;
+  --muted:#777;
+  --ff-display:'Bebas Neue',sans-serif;
+  --ff-serif:'Playfair Display',serif;
+  --ff-body:'Raleway',sans-serif;
+  --ease:.3s ease;
+  --shadow:0 4px 24px rgba(0,0,0,.14);
+  --shadow-lg:0 10px 50px rgba(0,0,0,.28);
+}
+
+/* ─── BASE ───────────────────────────────────────────────── */
+body{font-family:var(--ff-body);color:var(--ink);background:var(--cream);overflow-x:hidden}
+
+/* ─── SCROLL ANIMATIONS ──────────────────────────────────── */
+.reveal,.reveal-l,.reveal-r{opacity:0;transition:opacity .75s ease,transform .75s ease}
+.reveal{transform:translateY(42px)}
+.reveal-l{transform:translateX(-42px)}
+.reveal-r{transform:translateX(42px)}
+.reveal.on,.reveal-l.on,.reveal-r.on{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* ─── NAV ────────────────────────────────────────────────── */
+#nav{position:fixed;top:0;width:100%;z-index:900;padding:1.4rem 2rem;display:flex;align-items:center;justify-content:space-between;transition:all .4s ease}
+#nav.stuck{background:rgba(12,12,12,.96);backdrop-filter:blur(12px);padding:.9rem 2rem;box-shadow:0 2px 24px rgba(0,0,0,.5)}
+.nav-brand{display:flex;align-items:center;gap:.7rem}
+.nav-brand img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--lime)}
+.nav-brand-txt{font-family:var(--ff-display);font-size:1.55rem;color:#fff;letter-spacing:.04em;line-height:1}
+.nav-brand-txt em{color:var(--lime);font-style:normal}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.82);font-size:.8rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;transition:color var(--ease)}
+.nav-links a:hover{color:var(--lime)}
+.nav-cta{background:var(--lime)!important;color:var(--dark)!important;padding:.45rem 1.2rem;border-radius:2px;font-weight:700!important}
+.nav-cta:hover{background:#fff!important}
+
+/* Hamburger */
+.hbg{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.hbg span{width:24px;height:2px;background:#fff;display:block;transition:all .3s ease}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Mobile drawer */
+#drawer{position:fixed;inset:0;background:var(--dark);z-index:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;opacity:0;pointer-events:none;transition:opacity .3s ease}
+#drawer.open{opacity:1;pointer-events:all}
+#drawer a{font-family:var(--ff-display);font-size:2.8rem;color:#fff;letter-spacing:.04em;transition:color .2s}
+#drawer a:hover{color:var(--lime)}
+
+/* ─── HERO ───────────────────────────────────────────────── */
+.hero{position:relative;height:100vh;min-height:620px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--dark)}
+.hero-bg{position:absolute;inset:0;background:url('buger%20with%20steam.jpg') center/cover no-repeat;opacity:.38;transform:scale(1.12);will-change:transform}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,12,12,.25) 0%,rgba(12,12,12,.55) 55%,rgba(12,12,12,.92) 100%)}
+.hero-body{position:relative;z-index:2;text-align:center;padding:0 1.5rem;max-width:960px}
+.hero-pill{display:inline-block;background:var(--lime);color:var(--dark);font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:.38rem 1.2rem;margin-bottom:1.5rem;opacity:0;transform:translateY(18px);animation:up .8s ease .3s forwards}
+.hero-title{font-family:var(--ff-display);font-size:clamp(4.5rem,13vw,11rem);color:#fff;line-height:.9;letter-spacing:.03em;opacity:0;transform:translateY(28px);animation:up .9s ease .5s forwards}
+.hero-title em{color:var(--lime);font-style:normal}
+.hero-sub{font-family:var(--ff-serif);font-style:italic;font-size:clamp(1rem,2.5vw,1.35rem);color:rgba(255,255,255,.78);margin:1.1rem 0 2.4rem;opacity:0;transform:translateY(18px);animation:up .8s ease .7s forwards}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:up .8s ease .9s forwards}
+.btn{display:inline-block;padding:.82rem 2rem;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;transition:all .3s ease;border:none}
+.btn-lime{background:var(--lime);color:var(--dark)}
+.btn-lime:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(168,212,0,.42)}
+.btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45)}
+.btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;opacity:0;animation:fadein 1s ease 1.6s forwards}
+.hero-scroll span{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.scroll-bar{width:1px;height:38px;background:linear-gradient(to bottom,var(--lime),transparent);animation:pulse 2s ease infinite}
+
+/* ─── STATS ──────────────────────────────────────────────── */
+.stats{background:var(--dark);padding:2.5rem 1.5rem}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center}
+.stat-n{font-family:var(--ff-display);font-size:2.8rem;color:var(--lime);line-height:1}
+.stat-l{font-size:.7rem;color:rgba(255,255,255,.52);letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem}
+
+/* ─── SHARED SECTION PARTS ───────────────────────────────── */
+section{padding:5.5rem 1.5rem}
+.wrap{max-width:1180px;margin:0 auto}
+.sec-label{font-size:.68rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--lime);margin-bottom:.65rem}
+.sec-title{font-family:var(--ff-display);font-size:clamp(2.4rem,6vw,4.4rem);line-height:.96;letter-spacing:.025em}
+.sec-title.lt{color:#fff}
+.sec-rule{width:56px;height:3px;background:var(--lime);margin:1.1rem 0 2rem}
+
+/* ─── MENU ───────────────────────────────────────────────── */
+.menu-sec{background:var(--cream)}
+.menu-hd{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.5rem}
+.menu-note{font-size:.78rem;color:var(--muted);font-style:italic;max-width:260px;text-align:right;line-height:1.5}
+.tabs{display:flex;gap:.45rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:2.2rem;padding-bottom:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:1.5px solid rgba(0,0,0,.14);color:var(--muted);padding:.45rem 1.15rem;font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;transition:all .22s ease;font-family:var(--ff-body);white-space:nowrap;flex-shrink:0}
+.tab:hover,.tab.on{background:var(--dark);border-color:var(--dark);color:var(--lime)}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:1.4rem}
+.mc{background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.06);transition:transform .3s ease,box-shadow .3s ease}
+.mc:hover{transform:translateY(-7px);box-shadow:0 14px 44px rgba(0,0,0,.13)}
+.mc-wrap{overflow:hidden;position:relative}
+.mc img{width:100%;height:195px;object-fit:cover;transition:transform .5s ease}
+.mc:hover .mc-wrap img{transform:scale(1.06)}
+.mc.sold-out{opacity:.72}
+.mc.sold-out .mc-wrap::after{content:'SOLD OUT';position:absolute;top:14px;right:0;background:#e53e3e;color:#fff;font-family:var(--ff-display);font-size:1rem;letter-spacing:.12em;padding:.28rem .9rem;border-radius:2px 0 0 2px;pointer-events:none;z-index:4}
+.mc.sold-out .mc-price{color:#999;text-decoration:line-through}
+.mc-body{padding:1.2rem}
+.mc-name{font-family:var(--ff-serif);font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
+.mc-desc{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.7rem}
+.mc-price{font-family:var(--ff-display);font-size:1.45rem;color:var(--lime-dk);letter-spacing:.02em}
+
+/* ─── STORY ──────────────────────────────────────────────── */
+.story-sec{background:var(--dark);overflow:hidden}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.story-imgs{position:relative}
+.story-main{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px}
+.story-accent{position:absolute;bottom:-2rem;right:-2rem;width:52%;aspect-ratio:1;object-fit:cover;border-radius:4px;border:4px solid var(--dark);box-shadow:var(--shadow-lg)}
+.story-txt{color:rgba(255,255,255,.68);line-height:1.82;font-size:.93rem;margin-bottom:1.4rem}
+.story-quote{border-left:3px solid var(--lime);padding-left:1.4rem;margin:2rem 0}
+.story-quote p{font-family:var(--ff-serif);font-style:italic;font-size:1.18rem;color:#fff;line-height:1.62}
+.story-quote cite{display:block;margin-top:.45rem;font-size:.72rem;color:var(--lime);letter-spacing:.12em;text-transform:uppercase;font-style:normal}
+.team-row{display:flex;gap:1rem;margin-top:2.2rem;flex-wrap:wrap}
+.team-pic img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.09);transition:border-color .3s}
+.team-pic img:hover{border-color:var(--lime)}
+.team-pic-name{font-size:.72rem;color:rgba(255,255,255,.45);text-align:center;margin-top:.4rem}
+
+/* ─── TESTIMONIALS ───────────────────────────────────────── */
+.testi-sec{background:var(--cream2)}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.4rem;margin-top:3rem}
+.tcard{background:#fff;padding:1.8rem;border-radius:4px;box-shadow:0 2px 14px rgba(0,0,0,.05)}
+.tcard-stars{color:var(--lime);font-size:.95rem;letter-spacing:.1em;margin-bottom:.9rem}
+.tcard-txt{font-family:var(--ff-serif);font-style:italic;font-size:.97rem;line-height:1.72;margin-bottom:1.4rem;color:var(--ink)}
+.tcard-author{display:flex;align-items:center;gap:.7rem}
+.tcard-author img{width:46px;height:46px;border-radius:50%;object-fit:cover}
+.tcard-name{font-weight:600;font-size:.88rem}
+.tcard-role{font-size:.73rem;color:var(--muted)}
+
+/* ─── MEMORIAL ───────────────────────────────────────────── */
+.memorial-sec{background:#111010;padding:5.5rem 1.5rem}
+.memorial-inner{max-width:780px;margin:0 auto;text-align:center}
+.memorial-photo{width:160px;height:160px;border-radius:50%;object-fit:cover;margin:0 auto 2rem;border:3px solid rgba(255,255,255,.15);display:block}
+.memorial-label{font-size:.68rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+.memorial-name{font-family:var(--ff-display);font-size:clamp(2.2rem,6vw,3.8rem);color:#fff;letter-spacing:.04em;line-height:1;margin-bottom:.5rem}
+.memorial-dates{font-size:.82rem;color:rgba(255,255,255,.38);letter-spacing:.12em;margin-bottom:2rem}
+.memorial-rule{width:48px;height:1px;background:rgba(255,255,255,.2);margin:0 auto 2rem}
+.memorial-txt{font-family:var(--ff-serif);font-style:italic;font-size:1.05rem;color:rgba(255,255,255,.7);line-height:1.85;margin-bottom:2.5rem;max-width:600px;margin-left:auto;margin-right:auto}
+.memorial-hotline{display:inline-flex;flex-direction:column;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1.4rem 2.4rem;margin-top:.5rem}
+.memorial-hotline-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.memorial-hotline-number{font-family:var(--ff-display);font-size:2.4rem;color:#fff;letter-spacing:.08em;line-height:1}
+.memorial-hotline-sub{font-size:.75rem;color:rgba(255,255,255,.38);margin-top:.15rem}
+
+/* ─── EVENTS ─────────────────────────────────────────────── */
+.events-sec{background:var(--dark2)}
+.events-hd{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.8rem}
+.events-note{font-size:.77rem;color:rgba(255,255,255,.36);font-style:italic}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.4rem}
+.ecard{background:var(--dark3);border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:border-color .3s,transform .3s}
+.ecard:hover{border-color:var(--lime);transform:translateY(-5px)}
+.ecard img{width:100%;height:175px;object-fit:cover}
+.ecard-body{padding:1.4rem}
+.ecard-date{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--lime);margin-bottom:.45rem}
+.ecard-name{font-family:var(--ff-display);font-size:1.55rem;color:#fff;letter-spacing:.03em;line-height:1.05;margin-bottom:.4rem}
+.ecard-loc{font-size:.78rem;color:rgba(255,255,255,.45)}
+
+/* ─── GALLERY ────────────────────────────────────────────── */
+.gallery-sec{background:var(--cream)}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:230px;gap:.7rem;margin-top:3rem}
+.gi{overflow:hidden;border-radius:3px;cursor:pointer;position:relative}
+.gi.tall{grid-row:span 2}
+.gi.wide{grid-column:span 2}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gi:hover img{transform:scale(1.08)}
+.gi-ov{position:absolute;inset:0;background:rgba(12,12,12,0);display:flex;align-items:center;justify-content:center;transition:background .3s}
+.gi:hover .gi-ov{background:rgba(12,12,12,.42)}
+.gi-ov-icon{color:#fff;opacity:0;transform:scale(.7);transition:all .3s ease;font-size:1.8rem}
+.gi:hover .gi-ov-icon{opacity:1;transform:scale(1)}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.lb.open{opacity:1;pointer-events:all}
+.lb img{max-width:90vw;max-height:86vh;object-fit:contain;border-radius:3px}
+.lb-close{position:absolute;top:1.4rem;right:1.4rem;color:#fff;font-size:1.6rem;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.1);border:none;transition:background .2s}
+.lb-close:hover{background:rgba(255,255,255,.22)}
+
+/* ─── CONTACT ────────────────────────────────────────────── */
+.contact-sec{background:var(--dark)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.55fr;gap:5rem;align-items:start}
+.cinfo-body{color:rgba(255,255,255,.62);font-size:.9rem;line-height:1.75;margin-bottom:2rem}
+.cdetail{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem}
+.cicon{width:40px;height:40px;background:rgba(168,212,0,.1);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--lime);font-size:1rem}
+.cdetail-lbl{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--lime);margin-bottom:.2rem}
+.cdetail-val{color:rgba(255,255,255,.68);font-size:.88rem;line-height:1.5}
+.cdetail-val a{color:inherit}
+.socials{display:flex;gap:.65rem;margin-top:1.8rem}
+.social{width:40px;height:40px;background:rgba(255,255,255,.06);border-radius:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;font-weight:700;transition:all .3s}
+.social:hover{background:var(--lime);color:var(--dark)}
+.cform{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:2.4rem}
+.cform-title{font-family:var(--ff-display);font-size:1.85rem;color:#fff;letter-spacing:.03em;margin-bottom:1.4rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fg{margin-bottom:.9rem}
+.fg label{display:block;font-size:.67rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.35rem}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:2px;padding:.7rem .95rem;color:#fff;font-family:var(--ff-body);font-size:.88rem;transition:border-color .2s;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--lime)}
+.fg select option{background:#1e1e1e}
+.fg textarea{resize:vertical;min-height:105px}
+.fsub{width:100%;padding:.88rem;background:var(--lime);color:var(--dark);font-family:var(--ff-body);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;transition:all .3s;margin-top:.4rem}
+.fsub:hover{background:#fff;box-shadow:0 6px 22px rgba(168,212,0,.38)}
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
+.owner-link{display:inline-block;margin-top:1.5rem;font-size:.62rem;color:rgba(255,255,255,.12);letter-spacing:.08em;text-decoration:none;transition:color .3s}
+.owner-link:hover{color:rgba(255,255,255,.35)}
+.foot-logo{font-family:var(--ff-display);font-size:2.4rem;color:#fff;letter-spacing:.05em;margin-bottom:.4rem}
+.foot-logo em{color:var(--lime);font-style:normal}
+.foot-tag{font-size:.75rem;color:rgba(255,255,255,.35);letter-spacing:.1em;margin-bottom:1.8rem}
+.foot-nav{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;list-style:none;margin-bottom:1.8rem}
+.foot-nav a{font-size:.72rem;color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.foot-nav a:hover{color:var(--lime)}
+.foot-copy{font-size:.7rem;color:rgba(255,255,255,.2)}
+
+
+/* ─── SCROLL PROGRESS ────────────────────────────────────── */
+#pgbar{position:fixed;top:0;left:0;height:3px;width:0%;background:var(--lime);z-index:99997;pointer-events:none;box-shadow:0 0 10px rgba(168,212,0,.7);transition:width .08s linear}
+
+/* ─── FILM GRAIN ─────────────────────────────────────────── */
+.hero::after,.story-sec::after,.events-sec::after,.contact-sec::after,.memorial-sec::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:10;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px}
+.hero{position:relative}.story-sec{position:relative}.events-sec{position:relative}.contact-sec{position:relative}.memorial-sec{position:relative}
+
+/* ─── HERO AMBIENT ───────────────────────────────────────── */
+@keyframes ambientPulse{0%,100%{opacity:.18}50%{opacity:.28}}
+.hero-glow{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(168,212,0,.22) 0%,transparent 70%);border-radius:50%;pointer-events:none;z-index:1;animation:ambientPulse 6s ease-in-out infinite}
+
+/* ─── CARD TILT ──────────────────────────────────────────── */
+.mc{will-change:transform;transform-style:preserve-3d}
+.mc .mc-body{transform:translateZ(18px)}
+
+/* ─── HERO SHIMMER ───────────────────────────────────────── */
+@keyframes shimmerSweep{0%{background-position:150% center}100%{background-position:-50% center}}
+.hero-title em{background:linear-gradient(90deg,var(--lime) 0%,#e0ff80 40%,var(--lime) 60%,var(--lime) 100%);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerSweep 3.5s ease 1.4s infinite}
+
+/* ─── KEYFRAMES ──────────────────────────────────────────── */
+@keyframes up{to{opacity:1;transform:translateY(0)}}
+@keyframes fadein{to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:960px){
+  .story-grid{grid-template-columns:1fr;gap:3rem}
+  .story-accent{display:none}
+  .story-main{aspect-ratio:16/9}
+  .contact-grid{grid-template-columns:1fr;gap:3rem}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:200px}
+  .gi.wide{grid-column:span 1}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .nav-links{display:none}
+  .hbg{display:flex}
+  section{padding:4rem 1.2rem}
+  .menu-hd{flex-direction:column;align-items:flex-start}
+  .menu-note{text-align:left}
+  .events-hd{flex-direction:column;align-items:flex-start}
+  .frow{grid-template-columns:1fr}
+  .cform{padding:1.5rem}
+}
+@media(max-width:480px){
+  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:155px}
+  .gi.tall{grid-row:span 1}
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+<div id="pgbar"></div>
+
+<!-- ═══ NAV ════════════════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#top" class="nav-brand">
+    <img src="AI logo for site.png" alt="Just Griddlin' Logo">
+    <span class="nav-brand-txt">Just <em>Griddlin'</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact" class="nav-cta">Book Us</a></li>
+  </ul>
+  <button class="hbg" id="hbg" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div id="drawer">
+  <a href="#menu" class="dl">Menu</a>
+  <a href="#story" class="dl">Our Story</a>
+  <a href="#events" class="dl">Events</a>
+  <a href="#gallery" class="dl">Gallery</a>
+  <a href="#contact" class="dl">Book Us</a>
+</div>
+
+<main id="main-content">
+<!-- ═══ HERO ════════════════════════════════════════════════ -->
+<div id="top"></div>
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-body">
+    <div class="hero-pill">Food &middot; Drinks &middot; Snacks</div>
+    <h1 class="hero-title">Just<br><em>Griddlin'</em></h1>
+    <p class="hero-sub">Family owned. Fresh made. Unforgettably good.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn btn-lime">View Menu</a>
+      <a href="#events" class="btn btn-ghost">Find Us</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══════════════════════════════════════════════ -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="reveal d1"><div class="stat-n">100%</div><div class="stat-l">Family Owned</div></div>
+    <div class="reveal d2"><div class="stat-n">Fresh</div><div class="stat-l">Made to Order</div></div>
+    <div class="reveal d3"><div class="stat-n">Michigan</div><div class="stat-l">Born &amp; Raised</div></div>
+    <div class="reveal d4"><div class="stat-n">★★★★★</div><div class="stat-l">Community Favorite</div></div>
+  </div>
+</div>
+
+<!-- ═══ MENU ════════════════════════════════════════════════ -->
+<section class="menu-sec" id="menu">
+  <div class="wrap">
+    <div class="menu-hd">
+      <div class="reveal">
+        <div class="sec-label">What We're Serving</div>
+        <h2 class="sec-title">The Menu</h2>
+        <div class="sec-rule"></div>
+      </div>
+      <p class="menu-note reveal d2">Menu &amp; prices change regularly.<br>Follow us on Facebook for the latest!</p>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ STORY ═══════════════════════════════════════════════ -->
+<section class="story-sec" id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="reveal-l">
+        <div class="story-imgs">
+          <img src="founder josh.jpg" alt="Josh — Founder of Just Griddlin'" class="story-main">
+          <img src="logo josh.jpg" alt="Josh with the Just Griddlin' sign" class="story-accent">
+        </div>
+      </div>
+      <div class="reveal-r">
+        <div class="sec-label">Who We Are</div>
+        <h2 class="sec-title lt">A Family Passion<br>on Four Wheels</h2>
+        <div class="sec-rule"></div>
+        <p class="story-txt">Just Griddlin' started with a simple belief: great food doesn't need to be complicated. It needs to be made with care, fresh ingredients, and a whole lot of love. What began as a dream became a rolling kitchen that's become a staple at events and festivals all across Michigan.</p>
+        <p class="story-txt">Josh built this business from the ground up — from the bright lime green truck you can spot from a mile away, to every recipe on the menu. This isn't just a job. It's a calling. And every plate that leaves this window is a reflection of everything this family stands for.</p>
+        <div class="story-quote">
+          <p>"We don't just cook food — we make memories. Every event, every fair, every customer who comes back is why we do this."</p>
+          <cite>— Josh, Founder</cite>
+        </div>
+        <div class="team-row">
+          <div class="team-pic">
+            <img src="founder josh.jpg" alt="Josh">
+            <div class="team-pic-name">Josh</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ════════════════════════════════════════ -->
+<section class="testi-sec">
+  <div class="wrap">
+    <div style="text-align:center" class="reveal">
+      <div class="sec-label" style="display:inline-block">What People Are Saying</div>
+      <h2 class="sec-title" style="margin-top:.65rem">Happy Customers</h2>
+      <div class="sec-rule" style="margin:1.1rem auto 0"></div>
+    </div>
+    <div class="testi-grid">
+      <div class="tcard reveal d1">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-txt">"The loaded burger is absolutely incredible. I drove 20 minutes just to come back for another one. Best food truck I've ever been to — hands down."</p>
+        <div class="tcard-author">
+          <img src="customer barb.jpg" alt="Barb">
+          <div><div class="tcard-name">Barb</div><div class="tcard-role">Regular Customer</div></div>
+        </div>
+      </div>
+      <div class="tcard reveal d2">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-txt">"Josh and his crew are always so friendly and the food is always hot and fresh. We look for the green truck at every local event now — never disappoints!"</p>
+        <div class="tcard-author">
+          <img src="customer james.jpg" alt="James">
+          <div><div class="tcard-name">James</div><div class="tcard-role">Event Regular</div></div>
+        </div>
+      </div>
+      <div class="tcard reveal d3">
+        <div class="tcard-stars">★★★★★</div>
+        <p class="tcard-txt">"I had the walking taco and it was honestly incredible — hot, fresh, and full of flavor. You can tell this food is made with real care. Truly one of the best things I've eaten from a food truck."</p>
+        <div class="tcard-author">
+          <img src="customer robert.jpg" alt="Robert">
+          <div><div class="tcard-name">Robert</div><div class="tcard-role">Walking Taco Fan</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MEMORIAL ════════════════════════════════════════════ -->
+<section class="memorial-sec">
+  <div class="memorial-inner reveal">
+    <div class="memorial-label">In Loving Memory</div>
+    <img src="nate.jpg" alt="Nate" class="memorial-photo">
+    <h2 class="memorial-name">Nate</h2>
+    <div class="memorial-dates">Forever in our hearts</div>
+    <div class="memorial-rule"></div>
+    <p class="memorial-txt">
+      Nate was more than a brother — he was a light. His laugh, his kindness, and his spirit live on in everything this family does. Every meal we make, every event we show up to, every customer we serve — we carry him with us. Just Griddlin' is dedicated to his memory, and to everyone who has ever felt the weight he carried.
+    </p>
+    <p class="memorial-txt" style="font-style:normal;font-family:var(--ff-body);font-size:.88rem;color:rgba(255,255,255,.45);">
+      If you or someone you love is struggling, please reach out. You are not alone.
+    </p>
+    <div class="memorial-hotline">
+      <div class="memorial-hotline-label">Suicide &amp; Crisis Lifeline</div>
+      <a href="tel:988" class="memorial-hotline-number">988</a>
+      <div class="memorial-hotline-sub">Call or text 988 &mdash; free, confidential, 24/7</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EVENTS ═══════════════════════════════════════════════ -->
+<section class="events-sec" id="events">
+  <div class="wrap">
+    <div class="events-hd">
+      <div class="reveal">
+        <div class="sec-label">Where to Find Us</div>
+        <h2 class="sec-title lt">Upcoming Events</h2>
+        <div class="sec-rule"></div>
+      </div>
+      <p class="events-note reveal">Follow <strong style="color:rgba(255,255,255,.6)">@Just Griddlin</strong> on Facebook for real-time updates!</p>
+    </div>
+    <div class="events-grid" id="eventsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ GALLERY ══════════════════════════════════════════════ -->
+<section class="gallery-sec" id="gallery">
+  <div class="wrap">
+    <div style="text-align:center" class="reveal">
+      <div class="sec-label" style="display:inline-block">The Food Speaks for Itself</div>
+      <h2 class="sec-title" style="margin-top:.65rem">Gallery</h2>
+      <div class="sec-rule" style="margin:1.1rem auto 0"></div>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ══════════════════════════════════════════════ -->
+<section class="contact-sec" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="reveal-l">
+        <div class="sec-label">Get in Touch</div>
+        <h2 class="sec-title lt">Book Us for<br>Your Event</h2>
+        <div class="sec-rule"></div>
+        <p class="cinfo-body">From backyard parties to county fairs, we bring the full Just Griddlin' experience to you. Fill out the form and we'll get back to you within 24 hours.</p>
+        <div class="cdetail">
+          <div class="cicon">📞</div>
+          <div>
+            <div class="cdetail-lbl">Phone</div>
+            <div class="cdetail-val"><a href="tel:2698329872">269-832-9872</a></div>
+          </div>
+        </div>
+        <div class="cdetail">
+          <div class="cicon">📘</div>
+          <div>
+            <div class="cdetail-lbl">Facebook</div>
+            <div class="cdetail-val">@Just Griddlin</div>
+          </div>
+        </div>
+        <div class="cdetail">
+          <div class="cicon">📍</div>
+          <div>
+            <div class="cdetail-lbl">Service Area</div>
+            <div class="cdetail-val">Michigan &amp; surrounding areas</div>
+          </div>
+        </div>
+        <div class="socials">
+          <a href="https://www.facebook.com/profile.php?id=61557612840890" class="social" title="Facebook" target="_blank" rel="noopener">f</a>
+        </div>
+      </div>
+
+      <div class="cform reveal-r">
+        <div class="cform-title">Send Us a Message</div>
+        <form id="cformEl" onsubmit="submitForm(event)">
+          <div class="frow">
+            <div class="fg"><label>Your Name</label><input type="text" placeholder="Jane Smith" required></div>
+            <div class="fg"><label>Phone</label><input type="tel" placeholder="269-000-0000"></div>
+          </div>
+          <div class="fg"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
+          <div class="frow">
+            <div class="fg">
+              <label>Event Type</label>
+              <select>
+                <option value="">Select one…</option>
+                <option>Private Party</option>
+                <option>Corporate Event</option>
+                <option>Wedding</option>
+                <option>Festival / Fair</option>
+                <option>Birthday Party</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="fg"><label>Event Date</label><input type="date"></div>
+          </div>
+          <div class="fg"><label>Message</label><textarea placeholder="Tell us about your event — location, expected guests, any special requests…"></textarea></div>
+          <button type="submit" class="fsub" id="fsubBtn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+<footer>
+  <div class="foot-logo">Just <em>Griddlin'</em></div>
+  <div class="foot-tag">Food &middot; Drinks &middot; Snacks &middot; Family Owned</div>
+  <ul class="foot-nav">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Book Us</a></li>
+  </ul>
+  <div class="foot-copy">&copy; 2025 Just Griddlin'. All rights reserved &middot; <a href="tel:2698329872" style="color:inherit">269-832-9872</a></div>
+  <a href="admin.html" class="owner-link">Owner Login</a>
+</footer>
+
+</main>
+
+<!-- Lightbox -->
+<div class="lb" id="lb">
+  <button class="lb-close" onclick="closeLb()">&#x2715;</button>
+  <img id="lbImg" src="" alt="Gallery photo">
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     OWNER EDITABLE CONTENT
+     ═══════════════════════════════════════════════════════════
+     To update the menu: edit MENU_ITEMS below.
+     To update events: edit EVENTS below.
+     Each item follows the same pattern — copy/paste to add more.
+     ══════════════════════════════════════════════════════════ -->
+<script>
+/* ── MENU DATA ── edit names, descriptions, prices, images ── */
+const CATS = ['All','Burgers','Hot Dogs','Breakfast','Loaded Faves','Snacks'];
+
+let MENU_ITEMS = [
+  { cat:'Burgers',      name:"The Griddlin' Burger",  desc:'Fresh smash patty, special sauce, lettuce, tomato, grilled onion on a toasted bun.',              price:'$8',  img:'loaded burger.jpg' },
+  { cat:'Burgers',      name:'Steamer Burger',         desc:'Double smash patties straight off the flat top, melted cheese, caramelized onions.',              price:'$10', img:'buger with steam.jpg' },
+  { cat:'Hot Dogs',     name:'Loaded Dog',             desc:'All-beef hot dog piled high with your choice of toppings. Simple, perfect.',                      price:'$6',  img:'loaded hotdog.jpg' },
+  { cat:'Breakfast',    name:'Breakfast Burrito',      desc:'Eggs, cheese, and your choice of meat wrapped fresh. Morning done the right way.',                price:'$7',  img:'breakfast bureot.jpg' },
+  { cat:'Loaded Faves', name:'Loaded Waffles',         desc:"Crispy waffles stacked with savory toppings. A Just Griddlin' signature you won't find anywhere else.", price:'$9',  img:'loaded waffols.jpg' },
+  { cat:'Loaded Faves', name:'Loaded Baked Potato',    desc:'Fully loaded baked potato with all the fixings. Comfort food done right.',                       price:'$8',  img:'backed potato.jpg' },
+  { cat:'Snacks',       name:'Nachos',                 desc:'Crispy chips smothered in melted cheese, jalapeños, and all your favorite toppings.',             price:'$7',  img:'nacos.jpg' },
+  { cat:'Snacks',       name:'Walking Taco',           desc:"Doritos bag turned into a portable taco bowl. A fair food classic — Just Griddlin' style.",       price:'$6',  img:'walking taco.jpg' },
+  { cat:'Snacks',       name:'Sloppy Joe',             desc:'Classic sloppy joe made our way. Messy in the best way possible.',                               price:'$7',  img:'sluppy joe.jpg' },
+];
+
+/* ── EVENTS DATA ── update with real upcoming dates & locations */
+let EVENTS = [
+  { date:'Check Facebook for Dates', name:'Eaton County Fair',   loc:'Eaton County Fairgrounds, MI',        img:'eaton county fair event.jpg' },
+  { date:'Check Facebook for Dates', name:'Maple Festival',      loc:'Michigan',                            img:'maple fest even.jpg' },
+  { date:'Check Facebook for Dates', name:'Speedway Events',     loc:'Local Speedway, MI',                  img:'speedway event.jpg' },
+  { date:'Weekends & Events',        name:'Community Pop-Ups',   loc:'Follow us on FB for exact locations!', img:'event.jpg' },
+];
+
+/* ── GALLERY IMAGES ── add/remove filenames as needed ─────── */
+const GALLERY = [
+  { src:'buger with steam.jpg',          tall:true,  wide:false },
+  { src:'loaded burger.jpg',             tall:false, wide:false },
+  { src:'loaded hotdog.jpg',             tall:false, wide:false },
+  { src:'breakfast bureot.jpg',          tall:false, wide:false },
+  { src:'nacos.jpg',                     tall:false, wide:false },
+  { src:'loaded waffols.jpg',            tall:true,  wide:false },
+  { src:'walking taco.jpg',              tall:false, wide:false },
+  { src:'backed potato.jpg',             tall:false, wide:false },
+  { src:'food truck.jpg',                tall:false, wide:true  },
+  { src:'speedway event.jpg',            tall:false, wide:false },
+  { src:'eaton county fair event.jpg',   tall:false, wide:false },
+];
+
+/* ════════════════════════════════════════════════════════════
+   DO NOT EDIT BELOW THIS LINE
+   ══════════════════════════════════════════════════════════ */
+
+// ── Build Menu ─────────────────────────────────────────────
+let activeCat = 'All';
+function buildMenu(cat) {
+  activeCat = cat;
+  // tabs
+  const tabsEl = document.getElementById('tabs');
+  if (!tabsEl.children.length) {
+    CATS.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'tab' + (c === 'All' ? ' on' : '');
+      b.textContent = c;
+      b.onclick = () => {
+        tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+        b.classList.add('on');
+        buildMenu(c);
+      };
+      tabsEl.appendChild(b);
+    });
+  }
+  const items = cat === 'All' ? MENU_ITEMS : MENU_ITEMS.filter(i => i.cat === cat);
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = '';
+  items.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'mc reveal' + (item.soldOut ? ' sold-out' : '');
+    d.style.transitionDelay = (i * 0.06) + 's';
+    d.innerHTML = `<div class="mc-wrap"><img src="${item.img}" alt="${item.name}" loading="lazy"></div>
+      <div class="mc-body">
+        <div class="mc-name">${item.name}</div>
+        <div class="mc-desc">${item.desc}</div>
+        <div class="mc-price">${item.price}</div>
+      </div>`;
+    grid.appendChild(d);
+  });
+  setTimeout(() => grid.querySelectorAll('.reveal').forEach(e => e.classList.add('on')), 40);
+}
+
+// ── Build Events ───────────────────────────────────────────
+function buildEvents() {
+  const g = document.getElementById('eventsGrid');
+  EVENTS.forEach((ev, i) => {
+    const d = document.createElement('div');
+    d.className = 'ecard reveal';
+    d.style.transitionDelay = (i * 0.1) + 's';
+    d.innerHTML = `<img src="${ev.img}" alt="${ev.name}" loading="lazy">
+      <div class="ecard-body">
+        <div class="ecard-date">&#128197; ${ev.date}</div>
+        <div class="ecard-name">${ev.name}</div>
+        <div class="ecard-loc">&#128205; ${ev.loc}</div>
+      </div>`;
+    g.appendChild(d);
+  });
+}
+
+// ── Build Gallery ──────────────────────────────────────────
+function buildGallery() {
+  const g = document.getElementById('galleryGrid');
+  GALLERY.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'gi reveal' + (item.tall ? ' tall' : '') + (item.wide ? ' wide' : '');
+    d.style.transitionDelay = (i * 0.045) + 's';
+    d.innerHTML = `<img src="${item.src}" alt="Just Griddlin' food" loading="lazy">
+      <div class="gi-ov"><span class="gi-ov-icon">&#8853;</span></div>`;
+    d.addEventListener('click', () => openLb(item.src));
+    g.appendChild(d);
+  });
+}
+
+// ── Lightbox ───────────────────────────────────────────────
+function openLb(src) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lb').addEventListener('click', e => { if (e.target === e.currentTarget) closeLb(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+// ── IntersectionObserver ───────────────────────────────────
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('on'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+function watchReveal() {
+  document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => io.observe(el));
+}
+
+// ── Nav scroll + parallax ──────────────────────────────────
+const nav = document.getElementById('nav');
+const heroBg = document.getElementById('heroBg');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('stuck', window.scrollY > 55);
+  if (heroBg) heroBg.style.transform = `scale(1.12) translateY(${window.scrollY * 0.14}px)`;
+}, { passive: true });
+
+// ── Hamburger ──────────────────────────────────────────────
+const hbg = document.getElementById('hbg');
+const drawer = document.getElementById('drawer');
+hbg.addEventListener('click', () => {
+  hbg.classList.toggle('open');
+  drawer.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+});
+document.querySelectorAll('.dl').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  hbg.classList.remove('open');
+  drawer.classList.remove('open');
+  document.body.style.overflow = '';
+  const target = document.querySelector(a.getAttribute('href'));
+  if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 50);
+}));
+
+// Smooth scroll for all nav anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  if (a.classList.contains('dl')) return;
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// ── Form ───────────────────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('fsubBtn');
+  btn.textContent = '✓ Message Sent!';
+  btn.style.background = '#4caf50';
+  setTimeout(() => {
+    btn.textContent = 'Send Message';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3500);
+}
+
+// ── Scroll Progress Bar ────────────────────────────────────
+const pgbar = document.getElementById('pgbar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  pgbar.style.width = pct + '%';
+}, { passive: true });
+
+
+// ── 3D Card Tilt ───────────────────────────────────────────
+document.querySelectorAll('.mc').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(700px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateY(-7px)`;
+    card.style.boxShadow = `${-x * 16}px ${-y * 16}px 40px rgba(0,0,0,.18)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+});
+
+// ── Data priority: localStorage → menu-data.js → inline defaults
+// localStorage = Josh's unsaved/in-progress edits on his own device
+// menu-data.js = the last version Josh exported and deployed (what everyone sees)
+// inline defaults = first-run fallback only
+try {
+  const sm = localStorage.getItem('jg_menu');
+  const se = localStorage.getItem('jg_events');
+  if (sm) MENU_ITEMS = JSON.parse(sm);
+  else if (window.JG_MENU_ITEMS) MENU_ITEMS = window.JG_MENU_ITEMS;
+  if (se) EVENTS = JSON.parse(se);
+  else if (window.JG_EVENTS) EVENTS = window.JG_EVENTS;
+} catch(e) {
+  if (window.JG_MENU_ITEMS) MENU_ITEMS = window.JG_MENU_ITEMS;
+  if (window.JG_EVENTS)     EVENTS     = window.JG_EVENTS;
+}
+
+// ── Load custom photos from admin ──────────────────────────
+// Priority: localStorage (Josh's device) → menu-data.js (deployed for everyone) → original files
+function applyCustomPhotos() {
+  // Founder photo
+  const fi = localStorage.getItem('jg_founder_img') || window.JG_FOUNDER_IMG || null;
+  if (fi) {
+    document.querySelectorAll('.story-main').forEach(img => img.src = fi);
+  }
+
+  // Custom gallery photos
+  let customs = [];
+  try {
+    const cg = localStorage.getItem('jg_gallery_custom');
+    if (cg) customs = JSON.parse(cg);
+    else if (window.JG_GALLERY_CUSTOM && window.JG_GALLERY_CUSTOM.length) customs = window.JG_GALLERY_CUSTOM;
+  } catch(e) {
+    if (window.JG_GALLERY_CUSTOM) customs = window.JG_GALLERY_CUSTOM;
+  }
+
+  if (customs.length) {
+    const grid = document.getElementById('galleryGrid');
+    customs.forEach((item, i) => {
+      const d = document.createElement('div');
+      d.className = 'gi reveal';
+      d.style.transitionDelay = ((GALLERY.length + i) * 0.045) + 's';
+      d.innerHTML = `<img src="${item.src}" alt="Just Griddlin' photo" loading="lazy">
+        <div class="gi-ov"><span class="gi-ov-icon">&#8853;</span></div>`;
+      d.addEventListener('click', () => openLb(item.src));
+      grid.appendChild(d);
+    });
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────
+buildMenu('All');
+buildEvents();
+buildGallery();
+applyCustomPhotos();
+watchReveal();
+if (window.scrollY > 55) nav.classList.add('stuck');
+</script>
+</body>
+</html>
