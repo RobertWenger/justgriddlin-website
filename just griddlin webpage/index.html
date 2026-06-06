@@ -14,6 +14,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Just Griddlin' | Family Owned Food Truck">
 <meta name="twitter:description" content="Family owned food truck serving fresh burgers, hot dogs, breakfast, and loaded faves across Michigan.">
+<meta name="theme-color" content="#0C0C0C">
+<meta property="og:url" content="https://justgriddlin.netlify.app/">
+<link rel="canonical" href="https://justgriddlin.netlify.app/">
 
 <!-- Favicon using the logo -->
 <link rel="icon" type="image/png" href="AI logo for site.png">
@@ -50,7 +53,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--lime);outline-offse
   --cream2:#F0EBE0;
   --white:#FFFFFF;
   --ink:#1A1A1A;
-  --muted:#777;
+  --muted:#666;
   --ff-display:'Bebas Neue',sans-serif;
   --ff-serif:'Playfair Display',serif;
   --ff-body:'Raleway',sans-serif;
@@ -112,18 +115,28 @@ body{font-family:var(--ff-body);color:var(--ink);background:var(--cream);overflo
 .btn-lime:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(168,212,0,.42)}
 .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45)}
 .btn-ghost:hover{border-color:var(--lime);color:var(--lime);transform:translateY(-2px)}
+.btn:active{transform:translateY(1px)!important;box-shadow:none!important;opacity:.88}
+.tab:active{transform:scale(.96)}
+.fsub:active{transform:scale(.98);opacity:.9}
 .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.45rem;opacity:0;animation:fadein 1s ease 1.6s forwards}
 .hero-scroll span{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.42)}
 .scroll-bar{width:1px;height:38px;background:linear-gradient(to bottom,var(--lime),transparent);animation:pulse 2s ease infinite}
 
 /* ─── STATS ──────────────────────────────────────────────── */
-.stats{background:var(--dark);padding:2.5rem 1.5rem}
-.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center}
-.stat-n{font-family:var(--ff-display);font-size:2.8rem;color:var(--lime);line-height:1}
-.stat-l{font-size:.7rem;color:rgba(255,255,255,.52);letter-spacing:.12em;text-transform:uppercase;margin-top:.2rem}
+.stats{background:var(--dark);padding:3.2rem 1.5rem}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:0;text-align:center}
+.stat-item{padding:1rem 1.5rem;border-right:1px solid rgba(255,255,255,.07)}
+.stat-item:last-child{border-right:none}
+.stat-n{font-family:var(--ff-display);font-size:3.2rem;color:var(--lime);line-height:1}
+.stat-item:first-child .stat-n{font-size:2.2rem}
+.stat-l{font-size:.65rem;color:rgba(255,255,255,.42);letter-spacing:.14em;text-transform:uppercase;margin-top:.35rem}
 
 /* ─── SHARED SECTION PARTS ───────────────────────────────── */
-section{padding:5.5rem 1.5rem}
+section{padding:6.5rem 1.5rem}
+.menu-sec{padding-top:5rem;padding-bottom:5rem}
+.testi-sec{padding-top:5rem;padding-bottom:5rem}
+.gallery-sec{padding-top:4.5rem;padding-bottom:4.5rem}
+.memorial-sec{padding-top:7rem;padding-bottom:7rem}
 .wrap{max-width:1180px;margin:0 auto}
 .sec-label{font-size:.68rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--lime);margin-bottom:.65rem}
 .sec-title{font-family:var(--ff-display);font-size:clamp(2.4rem,6vw,4.4rem);line-height:.96;letter-spacing:.025em}
@@ -133,7 +146,7 @@ section{padding:5.5rem 1.5rem}
 /* ─── MENU ───────────────────────────────────────────────── */
 .menu-sec{background:var(--cream)}
 .menu-hd{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-bottom:2.5rem}
-.menu-note{font-size:.78rem;color:var(--muted);font-style:italic;max-width:260px;text-align:right;line-height:1.5}
+.menu-note{font-size:.72rem;color:rgba(0,0,0,.32);font-style:italic;max-width:220px;text-align:right;line-height:1.55;align-self:flex-end;padding-bottom:.2rem}
 .tabs{display:flex;gap:.45rem;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:2.2rem;padding-bottom:2px}
 .tabs::-webkit-scrollbar{display:none}
 .tab{background:none;border:1.5px solid rgba(0,0,0,.14);color:var(--muted);padding:.45rem 1.15rem;font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;transition:all .22s ease;font-family:var(--ff-body);white-space:nowrap;flex-shrink:0}
@@ -299,17 +312,26 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
 @media(max-width:720px){
   .nav-links{display:none}
   .hbg{display:flex}
-  section{padding:4rem 1.2rem}
-  .menu-hd{flex-direction:column;align-items:flex-start}
-  .menu-note{text-align:left}
+  section{padding:4.5rem 1.2rem}
+  .menu-sec{padding-top:3.5rem;padding-bottom:3.5rem}
+  .testi-sec{padding-top:3.5rem;padding-bottom:3.5rem}
+  .gallery-sec{padding-top:3rem;padding-bottom:3rem}
+  .memorial-sec{padding-top:5rem;padding-bottom:5rem}
+  .menu-hd{flex-direction:column;align-items:flex-start;gap:.6rem}
+  .menu-note{text-align:left;max-width:100%;color:rgba(0,0,0,.28)}
   .events-hd{flex-direction:column;align-items:flex-start}
   .frow{grid-template-columns:1fr}
   .cform{padding:1.5rem}
+  .menu-grid{gap:1rem}
 }
 @media(max-width:480px){
-  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:155px}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}
   .gi.tall{grid-row:span 1}
-  .stats-inner{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.07);padding:.9rem 1rem}
+  .stat-item:nth-child(odd){border-right:1px solid rgba(255,255,255,.07)}
+  .stat-item:nth-last-child(-n+2){border-bottom:none}
+  .stat-item:first-child .stat-n{font-size:2.8rem}
 }
 </style>
 </head>
@@ -331,7 +353,7 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#contact" class="nav-cta">Book Us</a></li>
   </ul>
-  <button class="hbg" id="hbg" aria-label="Open menu">
+  <button class="hbg" id="hbg" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -370,10 +392,10 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
 <!-- ═══ STATS ═══════════════════════════════════════════════ -->
 <div class="stats">
   <div class="stats-inner">
-    <div class="reveal d1"><div class="stat-n">100%</div><div class="stat-l">Family Owned</div></div>
-    <div class="reveal d2"><div class="stat-n">Fresh</div><div class="stat-l">Made to Order</div></div>
-    <div class="reveal d3"><div class="stat-n">Michigan</div><div class="stat-l">Born &amp; Raised</div></div>
-    <div class="reveal d4"><div class="stat-n">★★★★★</div><div class="stat-l">Community Favorite</div></div>
+    <div class="stat-item reveal d1"><div class="stat-n">100%</div><div class="stat-l">Family Owned</div></div>
+    <div class="stat-item reveal d2"><div class="stat-n">Fresh</div><div class="stat-l">Made to Order</div></div>
+    <div class="stat-item reveal d3"><div class="stat-n">Michigan</div><div class="stat-l">Born &amp; Raised</div></div>
+    <div class="stat-item reveal d4"><div class="stat-n">★★★★★</div><div class="stat-l">Community Favorite</div></div>
   </div>
 </div>
 
@@ -541,7 +563,7 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
           </div>
         </div>
         <div class="socials">
-          <a href="https://www.facebook.com/profile.php?id=61557612840890" class="social" title="Facebook" target="_blank" rel="noopener">f</a>
+          <a href="https://www.facebook.com/profile.php?id=61557612840890" class="social" title="Facebook" aria-label="Follow Just Griddlin' on Facebook" target="_blank" rel="noopener">f</a>
         </div>
       </div>
 
@@ -549,14 +571,14 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
         <div class="cform-title">Send Us a Message</div>
         <form id="cformEl" onsubmit="submitForm(event)">
           <div class="frow">
-            <div class="fg"><label>Your Name</label><input type="text" placeholder="Jane Smith" required></div>
-            <div class="fg"><label>Phone</label><input type="tel" placeholder="269-000-0000"></div>
+            <div class="fg"><label for="f-name">Your Name</label><input id="f-name" type="text" placeholder="Jane Smith" required autocomplete="name"></div>
+            <div class="fg"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="269-000-0000" autocomplete="tel"></div>
           </div>
-          <div class="fg"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
+          <div class="fg"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="you@example.com" required autocomplete="email"></div>
           <div class="frow">
             <div class="fg">
-              <label>Event Type</label>
-              <select>
+              <label for="f-type">Event Type</label>
+              <select id="f-type">
                 <option value="">Select one…</option>
                 <option>Private Party</option>
                 <option>Corporate Event</option>
@@ -566,9 +588,9 @@ footer{background:#070707;padding:3rem 1.5rem 2rem;text-align:center}
                 <option>Other</option>
               </select>
             </div>
-            <div class="fg"><label>Event Date</label><input type="date"></div>
+            <div class="fg"><label for="f-date">Event Date</label><input id="f-date" type="date"></div>
           </div>
-          <div class="fg"><label>Message</label><textarea placeholder="Tell us about your event — location, expected guests, any special requests…"></textarea></div>
+          <div class="fg"><label for="f-msg">Message</label><textarea id="f-msg" placeholder="Tell us about your event — location, expected guests, any special requests…"></textarea></div>
           <button type="submit" class="fsub" id="fsubBtn">Send Message</button>
         </form>
       </div>
@@ -670,6 +692,9 @@ function buildMenu(cat) {
   }
   const items = cat === 'All' ? MENU_ITEMS : MENU_ITEMS.filter(i => i.cat === cat);
   const grid = document.getElementById('menuGrid');
+  grid.style.opacity = '0';
+  grid.style.transform = 'translateY(10px)';
+  grid.style.transition = 'opacity .18s ease, transform .18s ease';
   grid.innerHTML = '';
   items.forEach((item, i) => {
     const d = document.createElement('div');
@@ -683,7 +708,28 @@ function buildMenu(cat) {
       </div>`;
     grid.appendChild(d);
   });
-  setTimeout(() => grid.querySelectorAll('.reveal').forEach(e => e.classList.add('on')), 40);
+  setTimeout(() => {
+    grid.style.opacity = '1';
+    grid.style.transform = '';
+    grid.querySelectorAll('.reveal').forEach(e => e.classList.add('on'));
+  }, 40);
+
+  // 3D tilt — only on non-touch devices
+  if (!window.matchMedia('(hover:none)').matches) {
+    grid.querySelectorAll('.mc').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(700px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateY(-7px)`;
+        card.style.boxShadow = `${-x * 16}px ${-y * 16}px 40px rgba(0,0,0,.18)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  }
 }
 
 // ── Build Events ───────────────────────────────────────────
@@ -710,9 +756,13 @@ function buildGallery() {
     const d = document.createElement('div');
     d.className = 'gi reveal' + (item.tall ? ' tall' : '') + (item.wide ? ' wide' : '');
     d.style.transitionDelay = (i * 0.045) + 's';
+    d.setAttribute('tabindex', '0');
+    d.setAttribute('role', 'button');
+    d.setAttribute('aria-label', 'View photo in lightbox');
     d.innerHTML = `<img src="${item.src}" alt="Just Griddlin' food" loading="lazy">
       <div class="gi-ov"><span class="gi-ov-icon">&#8853;</span></div>`;
     d.addEventListener('click', () => openLb(item.src));
+    d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(item.src); } });
     g.appendChild(d);
   });
 }
@@ -722,6 +772,7 @@ function openLb(src) {
   document.getElementById('lbImg').src = src;
   document.getElementById('lb').classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.querySelector('.lb-close').focus();
 }
 function closeLb() {
   document.getElementById('lb').classList.remove('open');
@@ -750,7 +801,9 @@ window.addEventListener('scroll', () => {
 const hbg = document.getElementById('hbg');
 const drawer = document.getElementById('drawer');
 hbg.addEventListener('click', () => {
-  hbg.classList.toggle('open');
+  const expanded = hbg.classList.toggle('open');
+  hbg.setAttribute('aria-expanded', expanded);
+  hbg.setAttribute('aria-label', expanded ? 'Close menu' : 'Open menu');
   drawer.classList.toggle('open');
   document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
 });
@@ -793,20 +846,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 
-// ── 3D Card Tilt ───────────────────────────────────────────
-document.querySelectorAll('.mc').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    card.style.transform = `perspective(700px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateY(-7px)`;
-    card.style.boxShadow = `${-x * 16}px ${-y * 16}px 40px rgba(0,0,0,.18)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-    card.style.boxShadow = '';
-  });
-});
+// ── 3D Card Tilt — applied inside buildMenu after cards exist ──
 
 // ── Data priority: localStorage → menu-data.js → inline defaults
 // localStorage = Josh's unsaved/in-progress edits on his own device
