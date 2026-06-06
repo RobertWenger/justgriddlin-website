@@ -23,7 +23,7 @@ var JG_MENU_ITEMS = [
   {
     "cat": "Breakfast",
     "name": "Breakfast Burrito",
-    "desc": "Eggs, cheese, and your choice of meat wrapped fresh. Morning done the right way.",
+    "desc": "Eggs, cheese, potato and your choice of meat wrapped fresh. Morning done the right way.",
     "price": "$8",
     "img": "breakfast bureot.jpg",
     "soldOut": false
